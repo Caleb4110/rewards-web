@@ -1,7 +1,7 @@
 import express from "express";
 import tryCatch from "../utils/tryCatch";
 import { auth, requiredScopes } from "express-oauth2-jwt-bearer";
-import { update } from "../controllers/reward.controller";
+import { updateReward, useReward } from "../controllers/reward.controller";
 
 export const checkJwt = auth({
   audience: process.env.AUTH0_AUDIENCE,
@@ -15,6 +15,8 @@ const rewardRouter = express.Router();
 rewardRouter.get("/get", () => console.log("getting"));
 
 // TODO: Add checkJwt here
-rewardRouter.post("/update", tryCatch(update));
+rewardRouter.post("/update", tryCatch(updateReward));
+
+rewardRouter.post("/use", tryCatch(useReward));
 
 export default rewardRouter;

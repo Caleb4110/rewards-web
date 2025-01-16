@@ -69,7 +69,6 @@ export default function CafeDashboard() {
       );
 
       if (data) {
-        console.log(data);
         setData(JSON.parse(data.text));
         setFilterData(JSON.parse(data.text));
       }

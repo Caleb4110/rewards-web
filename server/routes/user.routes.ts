@@ -1,7 +1,7 @@
 import express from "express";
 import tryCatch from "../utils/tryCatch";
 import { auth, requiredScopes } from "express-oauth2-jwt-bearer";
-import { getUser } from "../controllers/user.controller";
+import { getUser, getUserRewards } from "../controllers/user.controller";
 
 export const checkJwt = auth({
   audience: process.env.AUTH0_AUDIENCE,
@@ -14,5 +14,7 @@ const userRouter = express.Router();
 
 // TODO: add checkJwt here
 userRouter.get("/get", tryCatch(getUser));
+
+userRouter.get("/rewards", tryCatch(getUserRewards));
 
 export default userRouter;

@@ -12,9 +12,22 @@ const rewardModel = (sequelize: Sequelize) => {
         type: DataTypes.STRING,
         allowNull: false,
       },
-      // TODO: Might be better off calling this tokenCount
-      // and have another entry called rewardCount
-      rewardCount: {
+      tokenCount: {
+        type: DataTypes.INTEGER,
+        allowNull: false,
+        defaultValue: 1,
+      },
+      validRewards: {
+        type: DataTypes.INTEGER,
+        allowNull: false,
+        defaultValue: 0,
+      },
+      usedRewards: {
+        type: DataTypes.INTEGER,
+        allowNull: false,
+        defaultValue: 0,
+      },
+      visitCount: {
         type: DataTypes.INTEGER,
         allowNull: false,
         defaultValue: 1,

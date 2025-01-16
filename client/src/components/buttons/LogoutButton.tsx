@@ -1,12 +1,16 @@
 import { useAuth0 } from "@auth0/auth0-react";
 
-export default function LogoutButton() {
+interface Props {
+  returnTo: string;
+}
+
+export default function LogoutButton({ returnTo }: Props) {
   const { logout } = useAuth0();
 
   const handleLogout = () => {
     logout({
       logoutParams: {
-        returnTo: window.location.origin,
+        returnTo: returnTo,
       },
     });
   };

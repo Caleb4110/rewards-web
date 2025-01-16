@@ -5,7 +5,7 @@ const apiServerUrl = import.meta.env.VITE_API_SERVER_URL;
 
 export async function getCafeDashboardData(
   token: any,
-  cafeId: any,
+  id: any,
 ): Promise<ApiResponse> {
   const config = {
     url: `${apiServerUrl}/cafes/customers`,
@@ -15,7 +15,7 @@ export async function getCafeDashboardData(
       Authorization: `Bearer ${token}`,
     },
     params: {
-      cafeId,
+      id,
     },
   };
 
@@ -53,6 +53,51 @@ export async function getCafeDashboardData(
   const text = JSON.stringify(result);
   return {
     data: { text },
+    error,
+  };
+}
+
+export async function getUserDashboardData(
+  token: any,
+  id: any,
+): Promise<ApiResponse> {
+  const config = {
+    url: `${apiServerUrl}/users/rewards`,
+    method: "GET",
+    headers: {
+      "content-type": "application/json",
+      Authorization: `Bearer ${token}`,
+    },
+    params: {
+      id,
+    },
+  };
+
+  const { data, error } = (await apiService({ config })) as ApiResponse;
+
+  return {
+    data,
+    error,
+  };
+}
+
+export async function useReward(token: any, id: any): Promise<ApiResponse> {
+  const config = {
+    url: `${apiServerUrl}/rewards/use`,
+    method: "POST",
+    headers: {
+      "content-type": "application/json",
+      Authorization: `Bearer ${token}`,
+    },
+    data: {
+      id,
+    },
+  };
+
+  const { data, error } = (await apiService({ config })) as ApiResponse;
+
+  return {
+    data,
     error,
   };
 }

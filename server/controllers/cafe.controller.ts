@@ -39,12 +39,12 @@ export const cafe = async (req: Request, res: Response) => {
 
 // Retrieve all customers associated with a cafe
 export const customers = async (req: Request, res: Response) => {
-  const { cafeId } = req.query;
+  const { id } = req.query;
 
   // Fetch all customer rewards linked to a cafe
   const customers = await Rewards.findAll({
     where: {
-      cafeId: cafeId,
+      cafeId: id,
     },
     attributes: { include: ["userId", "rewardCount"] },
     raw: true,
