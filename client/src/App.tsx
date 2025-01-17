@@ -28,24 +28,34 @@ function App() {
   }
 
   return (
-    <div>
-      <Routes>
-        <Route path="/auth/dashboard" element={<LoginUserDashboard />} />
-        <Route path="/auth/reward" element={<div>NEED TO ADD REWARDS</div>} />
-        <Route path="/auth/cafe" element={<LoginCafe />} />
-        <Route
-          path="/cafe/dashboard"
-          element={<AuthenticationGuard component={CafeDashboard} />}
-        />
-        <Route
-          path="/user/dashboard"
-          element={<AuthenticationGuard component={UserDashboard} />}
-        />
+    <Routes>
+      <Route path="/auth/dashboard" element={<LoginUserDashboard />} />
+      <Route path="/auth/reward" element={<div>NEED TO ADD REWARDS</div>} />
+      <Route path="/auth/cafe" element={<LoginCafe />} />
+      <Route
+        path="/cafe/dashboard"
+        element={
+          <AuthenticationGuard
+            component={CafeDashboard}
+            redirectTo={"/auth/dashboard"}
+            role={"cafe"}
+          />
+        }
+      />
+      <Route
+        path="/user/dashboard"
+        element={
+          <AuthenticationGuard
+            component={UserDashboard}
+            redirectTo={"/auth/cafe"}
+            role={"user"}
+          />
+        }
+      />
 
-        {/* NOT FOUND ROUTE */}
-        <Route path="*" element={<NotFoundPage />} />
-      </Routes>
-    </div>
+      {/* NOT FOUND ROUTE */}
+      <Route path="*" element={<NotFoundPage />} />
+    </Routes>
   );
 }
 

@@ -7,7 +7,6 @@ interface Props {
 
 export default function LoginButton({ returnTo, role }: Props) {
   const { loginWithRedirect } = useAuth0();
-  console.log(role);
 
   const handleLogin = async () => {
     await loginWithRedirect({
