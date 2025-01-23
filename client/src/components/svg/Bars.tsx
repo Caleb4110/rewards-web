@@ -6,7 +6,7 @@ export default function Bars() {
       viewBox="0 0 24 24"
       strokeWidth={1.5}
       stroke="currentColor"
-      className="mb-auto mt-auto size-8"
+      className="m-auto size-8"
     >
       <path
         strokeLinecap="round"

@@ -20,7 +20,7 @@ export default function Reward({ id, cafeName, isValid, onUse }: Props) {
     <div className={"flex w-full rounded-md border p-4 " + colourScheme}>
       <Heading
         variant="primary"
-        className={"m-auto " + textColour}
+        className={"m-auto text-xl font-semibold " + textColour}
         position="left"
         title={cafeName}
       />
@@ -28,7 +28,7 @@ export default function Reward({ id, cafeName, isValid, onUse }: Props) {
         id={id}
         variant={isValid === true ? "primary" : "disabled"}
         disabled={!isValid}
-        label={isValid ? "USE REWARD" : "USED"}
+        label={isValid ? "REDEEM" : "USED"}
         onClick={onUse}
       />
     </div>

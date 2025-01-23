@@ -52,6 +52,7 @@ export default function UserDashboard() {
       const { data, error } = await getUserDashboardData(
         accessToken,
         user?.sub,
+        "auth0|67885176fbd7752104ce68c7",
       );
 
       if (data) {
@@ -118,23 +119,25 @@ export default function UserDashboard() {
           />
         </div>
         <Button
-          className="w-32 h-16 text-lg"
+          className="w-32 h-16"
           onClick={handleLogout}
           label="LOGOUT"
           variant="secondary"
         />
       </header>
-      {rewards.map((reward, index) => {
-        return (
-          <Reward
-            id={reward.id.toString()}
-            key={index}
-            cafeName={reward.cafeName}
-            isValid={reward.isValid}
-            onUse={buttonHandler}
-          />
-        );
-      })}
+      <div className="flex flex-col space-y-2 overflow-y-auto">
+        {rewards.map((reward, index) => {
+          return (
+            <Reward
+              id={reward.id.toString()}
+              key={index}
+              cafeName={reward.cafeName}
+              isValid={reward.isValid}
+              onUse={buttonHandler}
+            />
+          );
+        })}
+      </div>
     </div>
   );
 }

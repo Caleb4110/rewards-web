@@ -13,8 +13,8 @@ export default function Heading({
 }: Props) {
   const textColour =
     variant === "primary"
-      ? "text-moss_green-400"
-      : "text-moss_green-500 text-lg";
+      ? "text-moss_green-400 text-3xl"
+      : "text-moss_green-500 text-2xl";
   const textPosition =
     position === "center"
       ? "text-center"

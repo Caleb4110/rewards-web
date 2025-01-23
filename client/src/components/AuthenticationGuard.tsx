@@ -20,8 +20,6 @@ export default function AuthenticationGuard({
   useEffect(() => {
     const getClaims = async () => {
       const claims = await getIdTokenClaims();
-      console.log(claims);
-      console.log(role);
       if (!claims?.["https://rewards.com/roles"]?.includes(role)) {
         navigate(redirectTo);
       }

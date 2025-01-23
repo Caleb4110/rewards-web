@@ -3,7 +3,7 @@ import { customers } from "../controllers/cafe.controller";
 import tryCatch from "../utils/tryCatch";
 import { auth, requiredScopes } from "express-oauth2-jwt-bearer";
 
-export const checkJwt = auth({
+const checkJwt = auth({
   audience: process.env.AUTH0_AUDIENCE,
   issuerBaseURL: process.env.AUTH0_DOMAIN,
   tokenSigningAlg: "RS256",

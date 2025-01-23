@@ -4,6 +4,7 @@ import {
   DB_DATA_EMPTY,
   DB_INSERT_ERR,
   INVALID_TOKEN,
+  MISSING_PARAMETER,
 } from "../models/errorCodes";
 import db from "../models";
 
@@ -75,6 +76,10 @@ export const updateReward = async (req: Request, res: Response) => {
 
 export const useReward = async (req: Request, res: Response) => {
   const { id } = req.body;
+
+  if (!id) {
+    throw new ServerError(MISSING_PARAMETER, '"id" parameter not given', 400);
+  }
 
   const reward = await Rewards.findOne({
     where: {

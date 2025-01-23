@@ -1,10 +1,14 @@
-import LoginButton from "../components/buttons/LoginButton";
-import LogoutButton from "../components/buttons/LogoutButton";
+import LoginLayout from "../components/LoginLayout";
+
 // TODO: Make login page look pretty and redirect to rewards page
 export default function LoginUserReward() {
   return (
-    <>
-      <LoginButton returnTo={"/user/dashboard"} role={"user"} />
-    </>
+    <div className="p-5 bg-snow">
+      <LoginLayout
+        returnTo="/user/token"
+        role="user"
+        pageHeading="LOGIN TO RECIEVE REWARD"
+      />
+    </div>
   );
 }

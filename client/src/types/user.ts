@@ -22,12 +22,13 @@ export interface DbReward_t {
 }
 
 export interface WebUser_t {
-  id: number;
   phoneNumber: string;
   dob: Date;
   age: number;
-  location: string;
-  rewardCount: number;
+  suburb: string;
+  tokenCount: number;
+  visitCount: number;
+  validRewards: number;
   isSelected: boolean;
 }
 

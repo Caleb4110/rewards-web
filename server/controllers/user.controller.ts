@@ -1,4 +1,4 @@
-import { Request, Response } from "express";
+import { Request, RequestHandler, Response } from "express";
 
 import db from "../models";
 import { Op } from "sequelize";
@@ -54,15 +54,16 @@ export const getUser = async (req: Request, res: Response) => {
  * @returns A JSON response with the reward count, cafe id and cafe name.
  */
 export const getUserRewards = async (req: Request, res: Response) => {
-  const { id } = req.query;
+  const { userId, cafeId } = req.query;
 
-  if (!id) {
-    throw new ServerError(MISSING_PARAMETER, "Missing user id", 401);
+  if (!userId || !cafeId) {
+    throw new ServerError(MISSING_PARAMETER, "Missing user or cafe id", 401);
   }
 
   const rewardsPerCafe = await Rewards.findAll({
     where: {
-      userId: id,
+      userId: userId,
+      cafeId: cafeId,
     },
     attributes: { exclude: ["createdAt", "updatedAt"] },
   });
@@ -119,4 +120,49 @@ export const getUserRewards = async (req: Request, res: Response) => {
   });
 
   return res.status(200).send(rewards);
+};
+
+// TODO: Fetch the cafe name from its cafeId and add it to the response
+export const getUserTokens = async (req: Request, res: Response) => {
+  console.log(req.query);
+  const { userId, cafeId } = req.query;
+
+  if (!userId || !cafeId) {
+    throw new ServerError(MISSING_PARAMETER, "Missing user or cafe id", 401);
+  }
+
+  const reward = await Rewards.findOne({
+    where: {
+      userId: userId,
+      cafeId: cafeId,
+    },
+    attributes: {
+      exclude: ["createdAt", "updatedAt", "cafeId"],
+    },
+    raw: true,
+  });
+
+  if (!reward) {
+    throw new ServerError(DB_DATA_EMPTY, "Reward data not found", 400);
+  }
+
+  const cafe = await Cafes.findOne({
+    where: {
+      id: cafeId,
+    },
+    raw: true,
+  });
+
+  if (!cafe) {
+    throw new ServerError(DB_DATA_EMPTY, "Cafe not found", 400);
+  }
+
+  const cafeName = cafe.name;
+  const rewardFreq = cafe.rewardFreq;
+
+  return res.status(200).send({
+    ...reward,
+    cafeName,
+    rewardFreq,
+  });
 };

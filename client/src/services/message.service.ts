@@ -2,6 +2,7 @@ import apiService from "./api.service";
 import { ApiResponse } from "../models/apiResponse";
 
 const apiServerUrl = import.meta.env.VITE_API_SERVER_URL;
+const debug = false;
 
 export async function getCafeDashboardData(
   token: any,
@@ -31,16 +32,7 @@ export async function getCafeDashboardData(
 
   const { data, error } = (await apiService({ config })) as ApiResponse;
 
-  console.log(data);
-  if (!data) {
-    return {
-      data,
-      error,
-    };
-  }
-  const dataArr = JSON.parse(data.text);
-
-  const result: any[] = dataArr.map((d: any) => {
+  const result: any[] = data.map((d: any) => {
     const temp: any = d as any;
     const date = new Date(d.dob);
 
@@ -50,16 +42,20 @@ export async function getCafeDashboardData(
 
     return temp;
   });
-  const text = JSON.stringify(result);
+
+  // For debugging
+  debug && console.log(result);
+
   return {
-    data: { text },
+    data: result,
     error,
   };
 }
 
 export async function getUserDashboardData(
   token: any,
-  id: any,
+  userId: any,
+  cafeId: any,
 ): Promise<ApiResponse> {
   const config = {
     url: `${apiServerUrl}/users/rewards`,
@@ -69,7 +65,8 @@ export async function getUserDashboardData(
       Authorization: `Bearer ${token}`,
     },
     params: {
-      id,
+      userId,
+      cafeId,
     },
   };
 
@@ -102,46 +99,29 @@ export async function useReward(token: any, id: any): Promise<ApiResponse> {
   };
 }
 
-export async function getPublicResource(): Promise<ApiResponse> {
+export async function checkAuthenticityAndGetTokens(
+  token: any,
+  userId: any,
+  cafeId: any,
+  tagId: any,
+  eCode: any,
+  enc: any,
+  cmac: any,
+): Promise<ApiResponse> {
   const config = {
-    url: `${apiServerUrl}/api/messages/public`,
-    method: "GET",
-    headers: {
-      "content-type": "application/json",
-    },
-  };
-
-  const { data, error } = (await apiService({ config })) as ApiResponse;
-
-  return {
-    data,
-    error,
-  };
-}
-
-export async function getProtectedResource(token: any): Promise<ApiResponse> {
-  const config = {
-    url: `${apiServerUrl}/challenges`,
+    url: `${apiServerUrl}/users/scan`,
     method: "GET",
     headers: {
       "content-type": "application/json",
       Authorization: `Bearer ${token}`,
     },
-  };
-  const { data, error } = (await apiService({ config })) as ApiResponse;
-
-  return {
-    data,
-    error,
-  };
-}
-
-export async function getAdminResource(): Promise<ApiResponse> {
-  const config = {
-    url: `${apiServerUrl}/api/messages/admin`,
-    method: "GET",
-    headers: {
-      "content-type": "application/json",
+    params: {
+      userId,
+      cafeId,
+      tagId,
+      eCode,
+      enc,
+      cmac,
     },
   };
 

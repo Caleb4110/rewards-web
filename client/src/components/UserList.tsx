@@ -27,14 +27,14 @@ export default function UserList({ users, onChange }: Props) {
                 className="size-5"
               />
               <div className="flex flex-col leading-tight">
-                <div className="font-medium">{user.location.toUpperCase()}</div>
+                <div className="font-medium">{user.suburb.toUpperCase()}</div>
                 <div className="">Age: {user.age}</div>
                 <div className="">
                   Birth month: {capitalise(months[user.dob.getMonth()])}
                 </div>
               </div>
             </div>
-            <div className="text-right">{user.rewardCount} Visits</div>
+            <div className="text-right">{user.visitCount} Visits</div>
           </div>
         ))}
     </>

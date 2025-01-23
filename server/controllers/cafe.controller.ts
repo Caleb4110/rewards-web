@@ -42,20 +42,22 @@ export const customers = async (req: Request, res: Response) => {
   const { id } = req.query;
 
   // Fetch all customer rewards linked to a cafe
-  const customers = await Rewards.findAll({
+  const rewards = await Rewards.findAll({
     where: {
       cafeId: id,
     },
-    attributes: { include: ["userId", "rewardCount"] },
+    attributes: { include: ["userId", "tokenCount", "validRewards"] },
     raw: true,
   });
 
   const users = await Promise.all(
-    customers.map(async function (reward: {
+    rewards.map(async function (reward: {
       userId: number;
-      rewardCount: number;
+      tokenCount: number;
+      visitCount: number;
+      validRewards: number;
     }) {
-      const { userId, rewardCount } = reward;
+      const { userId, tokenCount, validRewards, visitCount } = reward;
 
       // Then fetch all users from the rewards
       // NOTE: No error handling for finding users,
@@ -67,14 +69,16 @@ export const customers = async (req: Request, res: Response) => {
             [Op.not]: null,
           },
         },
-        attributes: { exclude: ["password", "createdAt", "updatedAt"] },
+        attributes: { exclude: ["password", "createdAt", "updatedAt", "id"] },
         raw: true,
       });
 
       // Create a new object containing the user and the reward count
       return {
         ...user,
-        rewardCount,
+        validRewards,
+        visitCount,
+        tokenCount,
       };
     }),
   );

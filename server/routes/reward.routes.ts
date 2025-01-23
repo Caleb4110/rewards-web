@@ -15,8 +15,8 @@ const rewardRouter = express.Router();
 rewardRouter.get("/get", () => console.log("getting"));
 
 // TODO: Add checkJwt here
-rewardRouter.post("/update", tryCatch(updateReward));
+rewardRouter.post("/update", checkJwt, tryCatch(updateReward));
 
-rewardRouter.post("/use", tryCatch(useReward));
+rewardRouter.post("/use", checkJwt, tryCatch(useReward));
 
 export default rewardRouter;

@@ -1,9 +1,4 @@
-import {
-  BrowserRouter as Router,
-  Route,
-  Navigate,
-  Routes,
-} from "react-router-dom";
+import { BrowserRouter as Router, Route, Routes } from "react-router-dom";
 import AuthenticationGuard from "./components/AuthenticationGuard";
 import LoginUserDashboard from "./pages/LoginUserDashboard";
 import LoginCafe from "./pages/LoginCafe";
@@ -12,9 +7,8 @@ import { useAuth0 } from "@auth0/auth0-react";
 import PageLoader from "./components/PageLoader";
 import CafeDashboard from "./pages/CafeDashboard";
 import UserDashboard from "./pages/UserDashboard";
-import Heading from "./components/Heading";
-import Button from "./components/buttons/Button";
-import LogoutButton from "./components/buttons/LogoutButton";
+import LoginUserReward from "./pages/LoginUserReward";
+import TokenPage from "./pages/TokenPage";
 
 function App() {
   const { isLoading, user } = useAuth0();
@@ -30,7 +24,7 @@ function App() {
   return (
     <Routes>
       <Route path="/auth/dashboard" element={<LoginUserDashboard />} />
-      <Route path="/auth/reward" element={<div>NEED TO ADD REWARDS</div>} />
+      <Route path="/auth/reward" element={<LoginUserReward />} />
       <Route path="/auth/cafe" element={<LoginCafe />} />
       <Route
         path="/cafe/dashboard"
@@ -52,7 +46,16 @@ function App() {
           />
         }
       />
-
+      <Route
+        path="/user/token"
+        element={
+          <AuthenticationGuard
+            component={TokenPage}
+            redirectTo={"/auth/cafe"}
+            role={"user"}
+          />
+        }
+      />
       {/* NOT FOUND ROUTE */}
       <Route path="*" element={<NotFoundPage />} />
     </Routes>

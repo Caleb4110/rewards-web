@@ -1,11 +1,9 @@
 import { useEffect, useState } from "react";
-import { useNavigate } from "react-router-dom";
 
-import { DbUser_t, WebUser_t, months, ageMap, visitMap } from "../types/user";
+import { WebUser_t, months, ageMap, visitMap } from "../types/user";
 import UserList from "../components/UserList";
 import FilterBar from "../components/FilterBar";
 import Bars from "../components/svg/Bars";
-import axios from "axios";
 import Button from "../components/buttons/Button";
 import { useAuth0 } from "@auth0/auth0-react";
 import { getCafeDashboardData } from "../services/message.service";
@@ -26,7 +24,7 @@ interface Filter {
 export default function CafeDashboard() {
   // Authentication stuff
   const [accessToken, setAccessToken] = useState<any | null>(null);
-  const { user, getAccessTokenSilently, loginWithPopup, isLoading } =
+  const { user, getAccessTokenSilently, loginWithPopup, isLoading, logout } =
     useAuth0();
 
   // Data variables
@@ -61,7 +59,6 @@ export default function CafeDashboard() {
   useEffect(() => {
     if (!accessToken) return;
 
-    // TODO: Fetch cafe id on login
     const getMessage = async () => {
       const { data, error } = await getCafeDashboardData(
         accessToken,
@@ -69,8 +66,8 @@ export default function CafeDashboard() {
       );
 
       if (data) {
-        setData(JSON.parse(data.text));
-        setFilterData(JSON.parse(data.text));
+        setData(data);
+        setFilterData(data);
       }
 
       // TODO: HANDLE ERRRORS
@@ -229,8 +226,8 @@ export default function CafeDashboard() {
             if (visitRange) {
               const newData = tempData.filter(
                 (data) =>
-                  data.rewardCount >= visitRange[0] &&
-                  data.rewardCount <= visitRange[1],
+                  data.visitCount >= visitRange[0] &&
+                  data.visitCount <= visitRange[1],
               );
               visitData = visitData.concat(newData);
             }
@@ -248,7 +245,7 @@ export default function CafeDashboard() {
     // Filter out locations that don't match the searched location
     if (searchLoc !== "") {
       tempData = tempData.filter(function (data) {
-        return data.location.toLowerCase().indexOf(searchLoc) > -1;
+        return data.suburb.toLowerCase().indexOf(searchLoc) > -1;
       });
     }
 
@@ -260,12 +257,6 @@ export default function CafeDashboard() {
     setFilterData(data);
   }, [data]);
 
-  interface AuthContextType {
-    token: any;
-    login: (phoneNumber: string, password: string) => void;
-    logOut: () => void;
-  }
-
   const handleFilterChange = (updatedFilters: Filter[]) => {
     setFilters(updatedFilters);
   };
@@ -274,14 +265,26 @@ export default function CafeDashboard() {
     setOpen((open) => !open);
   };
 
+  const handleLogout = () => {
+    logout({
+      logoutParams: {
+        returnTo: "http://localhost:5173/auth/cafe",
+      },
+    });
+  };
+
   return (
     <div className="flex h-screen w-screen flex-col space-y-4 overflow-y-auto bg-snow p-5 text-3xl text-raisin_black">
-      <div className="flex space-x-2">
+      <div className="flex space-x-2 w-full">
+        <Button variant="primary" onClick={handleLogout} label="LOGOUT" />
+      </div>
+
+      <div className="flex w-full space-x-2">
         <Button
           onClick={handleOpen}
           variant="primary"
           Icon={Bars}
-          className="w-auto"
+          className="flex-none w-16"
         />
 
         <input
@@ -293,14 +296,14 @@ export default function CafeDashboard() {
       </div>
 
       <div
-        className={`fixed top-16 flex transition-opacity ease-in-out ${open ? "opacity-100" : "opacity-0"}`}
+        className={`fixed top-40 flex transition-opacity ease-in-out ${open ? "opacity-100" : "opacity-0"}`}
       >
         {open ? (
           <FilterBar filters={filters} onChange={handleFilterChange} />
         ) : null}
       </div>
 
-      <div className="">
+      <div>
         <Button
           onClick={handleSelectAll}
           variant="primary"
@@ -312,7 +315,7 @@ export default function CafeDashboard() {
         <UserList users={filterData} onChange={handleSelect} />
       </div>
 
-      <div className="">
+      <div>
         <Button
           onClick={handleCopy}
           variant="primary"
