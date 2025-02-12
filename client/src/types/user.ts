@@ -6,6 +6,13 @@ export interface DbUser_t {
   rewardCount: number;
 }
 
+export interface DashboardReward {
+  id: number;
+  cafeId: string;
+  cafeName: string;
+  isValid: boolean;
+}
+
 export interface DbCafe_t {
   id: number;
   name: string;

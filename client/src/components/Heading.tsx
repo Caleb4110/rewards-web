@@ -23,10 +23,10 @@ export default function Heading({
         : "text-left";
 
   return (
-    <div
+    <h1
       className={"w-full " + className + " " + textColour + " " + textPosition}
     >
       {title}
-    </div>
+    </h1>
   );
 }

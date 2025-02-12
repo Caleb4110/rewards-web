@@ -13,9 +13,13 @@ export default async function apiService(options: {
       error: null,
     };
   } catch (err: any) {
+    if (!err.response) {
+      return { data: null, error: err };
+    }
+
     return {
       data: null,
-      error: err.message,
+      error: err.response.data,
     };
   }
 }

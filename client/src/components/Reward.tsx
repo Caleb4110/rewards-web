@@ -1,4 +1,4 @@
-import Button from "./buttons/Button";
+import Button from "./Button";
 import Heading from "./Heading";
 
 interface Props {
@@ -8,7 +8,6 @@ interface Props {
   onUse: (e: any) => void;
 }
 
-// TODO: Add inactive button variant for used rewards
 export default function Reward({ id, cafeName, isValid, onUse }: Props) {
   const colourScheme = isValid
     ? "border-moss_green-400 bg-moss_green-600"

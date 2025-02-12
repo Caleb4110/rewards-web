@@ -25,5 +25,6 @@ compose.yaml
 *.sln
 *.sw?
 
-localhost-key.pem
-localhost.pem
+ssl
+
+notes.md

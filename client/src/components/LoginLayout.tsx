@@ -1,6 +1,6 @@
 import { useAuth0 } from "@auth0/auth0-react";
 import Heading from "./Heading";
-import Button from "./buttons/Button";
+import Button from "./Button";
 import CoffeeCup from "./svg/CoffeeCup";
 
 interface Props {
@@ -38,7 +38,7 @@ export default function LoginLayout({ role, returnTo, pageHeading }: Props) {
         title="You will be redirected to the login form once pressed"
       />
       <Button variant="primary" onClick={handleLogin} label="LOGIN" />
-      <CoffeeCup />
+      {/*<CoffeeCup />*/}
     </div>
   );
 }

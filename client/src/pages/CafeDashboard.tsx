@@ -1,12 +1,12 @@
 import { useEffect, useState } from "react";
-
 import { WebUser_t, months, ageMap, visitMap } from "../types/user";
 import UserList from "../components/UserList";
 import FilterBar from "../components/FilterBar";
 import Bars from "../components/svg/Bars";
-import Button from "../components/buttons/Button";
+import Button from "../components/Button";
 import { useAuth0 } from "@auth0/auth0-react";
 import { getCafeDashboardData } from "../services/message.service";
+import PageLoader from "../components/PageLoader";
 
 interface FilterOption {
   value: string;
@@ -26,6 +26,8 @@ export default function CafeDashboard() {
   const [accessToken, setAccessToken] = useState<any | null>(null);
   const { user, getAccessTokenSilently, loginWithPopup, isLoading, logout } =
     useAuth0();
+
+  const clientUrl = import.meta.env.VITE_AUTH0_CLIENT_URL;
 
   // Data variables
   const [data, setData] = useState<any[]>([]);
@@ -268,10 +270,13 @@ export default function CafeDashboard() {
   const handleLogout = () => {
     logout({
       logoutParams: {
-        returnTo: "http://localhost:5173/auth/cafe",
+        returnTo: `${clientUrl}auth/cafe`,
       },
     });
   };
+  if (isLoading) {
+    return <PageLoader />;
+  }
 
   return (
     <div className="flex h-screen w-screen flex-col space-y-4 overflow-y-auto bg-snow p-5 text-3xl text-raisin_black">
@@ -285,6 +290,7 @@ export default function CafeDashboard() {
           variant="primary"
           Icon={Bars}
           className="flex-none w-16"
+          hoverTitle="Open filters"
         />
 
         <input

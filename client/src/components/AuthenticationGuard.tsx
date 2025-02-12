@@ -14,13 +14,16 @@ export default function AuthenticationGuard({
   redirectTo,
   role,
 }: Props) {
-  const { getIdTokenClaims } = useAuth0();
+  const { getIdTokenClaims, isLoading } = useAuth0();
   const navigate = useNavigate();
 
   useEffect(() => {
     const getClaims = async () => {
       const claims = await getIdTokenClaims();
-      if (!claims?.["https://rewards.com/roles"]?.includes(role)) {
+      if (
+        !claims?.["https://rewards.com/roles"]?.includes(role) &&
+        !isLoading
+      ) {
         navigate(redirectTo);
       }
     };
@@ -28,7 +31,7 @@ export default function AuthenticationGuard({
     getClaims();
   }, []);
 
-  const Component = withAuthenticationRequired(component, {
+  const Component = withAuthenticationRequired(component as ComponentType, {
     onRedirecting: () => <PageLoader />,
   });
 

@@ -1,26 +1,24 @@
 import { useEffect, useState } from "react";
 import Heading from "../components/Heading";
 import Reward from "../components/Reward";
-import axios from "axios";
 import { useAuth0 } from "@auth0/auth0-react";
 import { getUserDashboardData, useReward } from "../services/message.service";
-import LogoutButton from "../components/buttons/LogoutButton";
-import Button from "../components/buttons/Button";
+import Button from "../components/Button";
+import RewardList from "../components/RewardList";
+import { DashboardReward } from "../types/user";
+import PageLoader from "../components/PageLoader";
 
-interface Props {}
-
-interface DashboardReward {
-  id: number;
-  cafeId: number;
-  cafeName: string;
-  isValid: boolean;
+interface Props {
+  cafeId?: string;
 }
 
-export default function UserDashboard() {
+export default function UserDashboard({ cafeId }: Props) {
   const [rewards, setRewards] = useState<DashboardReward[]>([]);
   const { user, getAccessTokenSilently, loginWithPopup, isLoading, logout } =
     useAuth0();
   const [accessToken, setAccessToken] = useState<any | null>(null);
+
+  const clientUrl = import.meta.env.VITE_AUTH0_CLIENT_URL;
 
   // TODO: Check if redirect or login with popup is better OR if the authenticationGuard does this for us
   // Get access token for requesting server data on page load
@@ -52,7 +50,7 @@ export default function UserDashboard() {
       const { data, error } = await getUserDashboardData(
         accessToken,
         user?.sub,
-        "auth0|67885176fbd7752104ce68c7",
+        cafeId || "auth0|67885176fbd7752104ce68c7",
       );
 
       if (data) {
@@ -98,11 +96,13 @@ export default function UserDashboard() {
   const handleLogout = () => {
     logout({
       logoutParams: {
-        returnTo: "http://localhost:5173/auth/dashboard",
+        returnTo: `${clientUrl}auth/dashboard`,
       },
     });
   };
-
+  if (!rewards || isLoading) {
+    return <PageLoader />;
+  }
   return (
     <div className="flex h-screen w-screen flex-col space-y-4 overflow-y-auto bg-snow p-5 text-3xl text-raisin_black">
       <header className="flex items-center space-x-4">
@@ -112,11 +112,6 @@ export default function UserDashboard() {
             position="center"
             title="AVAILABLE REWARDS"
           />
-          <Heading
-            variant="secondary"
-            position="center"
-            title="NOTE: Staff member must click on reward to use it"
-          />
         </div>
         <Button
           className="w-32 h-16"
@@ -125,19 +120,12 @@ export default function UserDashboard() {
           variant="secondary"
         />
       </header>
-      <div className="flex flex-col space-y-2 overflow-y-auto">
-        {rewards.map((reward, index) => {
-          return (
-            <Reward
-              id={reward.id.toString()}
-              key={index}
-              cafeName={reward.cafeName}
-              isValid={reward.isValid}
-              onUse={buttonHandler}
-            />
-          );
-        })}
-      </div>
+      <Heading
+        variant="secondary"
+        position="center"
+        title="NOTE: Staff member must click on reward to use it"
+      />
+      <RewardList rewards={rewards} buttonHandler={buttonHandler} />
     </div>
   );
 }

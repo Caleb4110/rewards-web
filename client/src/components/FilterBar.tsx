@@ -63,6 +63,7 @@ export default function FilterBar({ filters, onChange }: Props) {
         {filters.map((filter) => (
           <div key={filter.id} className="flex w-36 flex-col">
             <button
+              title={filter.title}
               className="flex w-full justify-between"
               onClick={() => handleTitleChange(filter.id)}
             >

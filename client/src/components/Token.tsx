@@ -6,7 +6,7 @@ interface Props {
 export default function Token({ isUsed, index }: Props) {
   const colour = isUsed
     ? "bg-moss_green-400 shadow-2xl text-snow"
-    : "border border moss-green animate-pulse";
+    : "border border-moss_green-400 text-moss_green_400 animate-pulse";
 
   return (
     <div

@@ -1,4 +1,4 @@
-import { BrowserRouter as Router, Route, Routes } from "react-router-dom";
+import { Route, Routes } from "react-router-dom";
 import AuthenticationGuard from "./components/AuthenticationGuard";
 import LoginUserDashboard from "./pages/LoginUserDashboard";
 import LoginCafe from "./pages/LoginCafe";
@@ -11,16 +11,6 @@ import LoginUserReward from "./pages/LoginUserReward";
 import TokenPage from "./pages/TokenPage";
 
 function App() {
-  const { isLoading, user } = useAuth0();
-
-  if (isLoading) {
-    return (
-      <div className="page-layout">
-        <PageLoader />
-      </div>
-    );
-  }
-
   return (
     <Routes>
       <Route path="/auth/dashboard" element={<LoginUserDashboard />} />
@@ -56,6 +46,7 @@ function App() {
           />
         }
       />
+      <Route path="/" />
       {/* NOT FOUND ROUTE */}
       <Route path="*" element={<NotFoundPage />} />
     </Routes>

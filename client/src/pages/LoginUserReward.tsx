@@ -1,6 +1,5 @@
 import LoginLayout from "../components/LoginLayout";
 
-// TODO: Make login page look pretty and redirect to rewards page
 export default function LoginUserReward() {
   return (
     <div className="p-5 bg-snow">

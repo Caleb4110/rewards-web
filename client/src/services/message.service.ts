@@ -2,7 +2,6 @@ import apiService from "./api.service";
 import { ApiResponse } from "../models/apiResponse";
 
 const apiServerUrl = import.meta.env.VITE_API_SERVER_URL;
-const debug = false;
 
 export async function getCafeDashboardData(
   token: any,
@@ -42,9 +41,6 @@ export async function getCafeDashboardData(
 
     return temp;
   });
-
-  // For debugging
-  debug && console.log(result);
 
   return {
     data: result,
@@ -99,7 +95,7 @@ export async function useReward(token: any, id: any): Promise<ApiResponse> {
   };
 }
 
-export async function checkAuthenticityAndGetTokens(
+export async function checkAuthenticityAndGetRewardData(
   token: any,
   userId: any,
   cafeId: any,
