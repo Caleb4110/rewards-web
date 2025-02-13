@@ -1,3 +1,5 @@
+import Button from "./Button";
+import Heading from "./Heading";
 import ChevronDown from "./svg/ChevronDown";
 import ChevronUp from "./svg/ChevronUp";
 
@@ -19,7 +21,7 @@ interface Props {
   onChange: (updatedFilters: Filter[]) => void;
 }
 
-export default function FilterBar({ filters, onChange }: Props) {
+export default function FilterList({ filters, onChange }: Props) {
   // Handle changes in each filter's options
   const handleOptionChange = (filterId: string, optionValue: string) => {
     const updatedFilters = filters.map((filter: Filter) => {
@@ -58,48 +60,54 @@ export default function FilterBar({ filters, onChange }: Props) {
   };
 
   return (
-    <div className="flex w-fit flex-col space-y-4 rounded-md border border-moss_green-400 bg-moss_green-400 p-4 text-snow shadow-sm shadow-moss_green-500/80">
-      <div className="flex max-h-96 flex-col space-y-4 overflow-y-auto overflow-x-hidden">
+    <div className="flex w-full h-full flex-col justify-between  text-raisin_black ">
+      <div className="flex h-5/6 flex-col space-y-10 overflow-y-auto overflow-x-hidden">
         {filters.map((filter) => (
-          <div key={filter.id} className="flex w-36 flex-col">
+          <div key={filter.id} className="flex w-full flex-col ">
             <button
               title={filter.title}
               className="flex w-full justify-between"
               onClick={() => handleTitleChange(filter.id)}
             >
-              <h3 className="text-lg font-semibold">{filter.title}</h3>
+              <Heading
+                variant="primary"
+                position="left"
+                title={filter.title}
+                className="text-xl"
+              />
               {filter.shown ? <ChevronUp /> : <ChevronDown />}
             </button>
-            <div className="flex flex-col gap-2">
-              {filter.shown
-                ? filter.opts.map((opt) => (
+
+            {filter.shown
+              ? filter.opts.map((opt) => (
+                  <div className="flex flex-col p-2">
                     <label
                       key={opt.value}
-                      className="flex items-center space-x-2 text-sm font-medium"
+                      className="flex items-center space-x-3 text-sm font-medium"
                     >
                       <input
                         type="checkbox"
-                        className="form-checkbox rounded text-blue-500"
+                        className="form-checkbox rounded accent-moss_green-500 size-5"
                         checked={opt.checked}
                         onChange={() =>
                           handleOptionChange(filter.id, opt.value)
                         }
                       />
-                      <span>{opt.label}</span>
+                      <Heading
+                        variant="secondary"
+                        position="left"
+                        title={opt.label}
+                        className="text-lg text-moss_green-400"
+                      />
                     </label>
-                  ))
-                : null}
-            </div>
+                  </div>
+                ))
+              : null}
           </div>
         ))}
       </div>
 
-      <button
-        className="rounded-md bg-moss_green-300 text-lg font-medium"
-        onClick={handleClear}
-      >
-        CLEAR
-      </button>
+      <Button variant="primary" onClick={handleClear} label="CLEAR" />
     </div>
   );
 }

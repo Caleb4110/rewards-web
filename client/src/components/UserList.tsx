@@ -32,7 +32,7 @@ export default function UserList({ users, onChange }: Props) {
               aria-label={user.phoneNumber}
               checked={user.isSelected}
               type="checkbox"
-              className="size-5"
+              className="size-5 accent-moss_green-400"
             />
             <div className="flex flex-col leading-tight">
               <div className="font-medium">{user.suburb.toUpperCase()}</div>
