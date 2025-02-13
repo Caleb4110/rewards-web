@@ -14,7 +14,7 @@ export default function NotFoundPage() {
   };
 
   return (
-    <div className="flex flex-col h-screen w-screen bg-snow p-5 space-y-2 justify-center">
+    <div className="flex flex-col h-screen w-screen p-5 space-y-2 justify-center">
       <Heading
         variant="primary"
         position="center"

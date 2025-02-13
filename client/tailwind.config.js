@@ -68,6 +68,9 @@ export default {
           800: "#d9debc",
           900: "#ecefde",
         },
+        red: {
+          DEFAULT: "#d03c38",
+        },
       },
     },
   },

@@ -84,7 +84,7 @@ export default function UserDashboard({ cafeId }: Props) {
   }
   return (
     isAuthenticated && (
-      <div className="flex h-screen w-screen flex-col space-y-4 overflow-y-auto bg-snow p-5 text-3xl text-raisin_black">
+      <div className="flex h-screen w-screen flex-col space-y-4 overflow-y-auto p-5 text-3xl text-raisin_black">
         <header className="flex items-center space-x-4">
           <div className="w-5/6">
             <Heading

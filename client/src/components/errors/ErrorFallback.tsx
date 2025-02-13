@@ -18,7 +18,7 @@ export default function ErrorFallback({ error, resetErrorBoundary }: Props) {
         title="THE FOLLOWING ERROR HAS OCCURRED"
         className="text-2xl"
       />
-      <p className="text-3xl text-red-500">{error.message}</p>
+      <p className="text-3xl text-red">{error.message}</p>
       <Button
         onClick={resetErrorBoundary}
         variant="primary"

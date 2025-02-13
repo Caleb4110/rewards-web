@@ -78,7 +78,7 @@ export default function TokenPage() {
     return <PageLoader />;
   } else if (nfcError) {
     return (
-      <div className="flex flex-col space-y-2 justify-center h-screen w-screen bg-snow p-5 text-moss_green antialiased">
+      <div className="flex flex-col space-y-2 justify-center h-screen w-screen p-5 text-moss_green antialiased">
         <Heading
           title={nfcError.toUpperCase()}
           position="center"
@@ -94,7 +94,7 @@ export default function TokenPage() {
     );
   } else if (isAuthenticated) {
     return (
-      <div className="flex flex-col  h-screen w-screen bg-snow p-5 text-moss_green antialiased">
+      <div className="flex flex-col  h-screen w-screen p-5 text-moss_green antialiased">
         <div className="flex flex-col h-1/3 space-y-2 justify-start">
           <Heading
             variant="secondary"

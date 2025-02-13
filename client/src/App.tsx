@@ -7,15 +7,9 @@ import CafeDashboard from "./pages/CafeDashboard";
 import UserDashboard from "./pages/UserDashboard";
 import LoginUserReward from "./pages/LoginUserReward";
 import TokenPage from "./pages/TokenPage";
-import ErrorFallback from "./components/errors/ErrorFallback";
-import { ErrorBoundary } from "react-error-boundary";
-import { ErrorInfo } from "react";
+import Callback from "./pages/Callback";
 
 function App() {
-  const logError = (error: Error, info: ErrorInfo) => {
-    console.error("An error occurred:", info);
-  };
-
   return (
     <Routes>
       <Route path="/auth/dashboard" element={<LoginUserDashboard />} />
@@ -51,7 +45,7 @@ function App() {
           />
         }
       />
-      <Route path="/callback" element={null} />
+      <Route path="/callback" Component={Callback} />
       {/* NOT FOUND ROUTE */}
       <Route path="*" element={<NotFoundPage />} />
     </Routes>
