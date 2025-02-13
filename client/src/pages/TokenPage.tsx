@@ -2,11 +2,12 @@ import { useState, useEffect } from "react";
 import { useAuth0 } from "@auth0/auth0-react";
 
 import TokenBar from "../components/TokenBar";
-import { checkAuthenticityAndGetRewardData } from "../services/message.service";
+import { checkAuthenticityAndGetRewardData } from "../services/api.service";
 import Heading from "../components/Heading";
 import Button from "../components/Button";
 import { useNavigate } from "react-router-dom";
 import PageLoader from "../components/PageLoader";
+import { useErrorBoundary } from "react-error-boundary";
 
 //  ETRNL err code options:
 //    ctrBehind - The URL has expired and is no longer valid.
@@ -20,72 +21,54 @@ import PageLoader from "../components/PageLoader";
 // TODO: Add cafe info functionality
 export default function TokenPage() {
   const [nfcError, setNfcError] = useState<string | null>(null);
-  const [accessToken, setAccessToken] = useState<any | null>(null);
-  const [rewardData, setRewardData] = useState<any | null>(null);
-  const { getAccessTokenSilently, loginWithPopup, isLoading, user } =
+  const [tokenData, setTokenData] = useState<any | null>(null);
+  const { getAccessTokenSilently, isAuthenticated, isLoading, user } =
     useAuth0();
+  const { showBoundary } = useErrorBoundary();
 
   // NOTE: TEMPORARY FOR TESTING
   const cafeId = "auth0|67885176fbd7752104ce68c7";
 
   const navigate = useNavigate();
 
-  // TODO: Check if redirect or login with popup is better OR if the authenticationGuard does this for us
-  // Get access token for requesting server data on page load
   useEffect(() => {
-    const getToken = async () => {
-      try {
-        const token = await getAccessTokenSilently();
-        setAccessToken(token);
-      } catch (error: any) {
-        if (
-          error.error === "login_required" ||
-          error.error === "consent_required"
-        ) {
-          loginWithPopup();
-        }
-        throw error;
-      }
-    };
-    if (!isLoading) {
-      getToken();
-    }
-  }, []);
+    if (!user?.sub) return;
 
-  useEffect(() => {
-    if (!accessToken) return;
-
-    // TODO: Fetch cafe id on login
     const getTokens = async () => {
-      // 1. Check tag authenticity
-      const url = new URL(window.location.href);
+      try {
+        const accessToken = await getAccessTokenSilently();
+        localStorage.setItem("accessToken", accessToken);
 
-      const tagId = url.searchParams.get("tagId");
-      const eCode = url.searchParams.get("eCode");
-      const enc = url.searchParams.get("enc");
-      const cmac = url.searchParams.get("cmac");
+        const url = new URL(window.location.href);
 
-      const { data, error } = await checkAuthenticityAndGetRewardData(
-        accessToken,
-        user?.sub,
-        cafeId,
-        tagId,
-        eCode,
-        enc,
-        cmac,
-      );
+        const tagId = url.searchParams.get("tagId");
+        const eCode = url.searchParams.get("eCode");
+        const enc = url.searchParams.get("enc");
+        const cmac = url.searchParams.get("cmac");
 
-      if (data) {
-        setNfcError(null);
-        setRewardData(data);
-      } else if (error) {
-        setNfcError(error.message.toUpperCase());
-        setRewardData(null);
+        const { data } = await checkAuthenticityAndGetRewardData(
+          user?.sub!,
+          cafeId,
+          tagId,
+          eCode,
+          enc,
+          cmac,
+        );
+
+        setTokenData(data);
+      } catch (error: any) {
+        if (error.response?.data) {
+          // Extract any tag scan errors
+          setNfcError(error.response.data.message);
+        } else {
+          // Otherwise, render the error page
+          showBoundary(error);
+        }
       }
     };
 
     getTokens();
-  }, [accessToken]);
+  }, [user?.sub]);
 
   const rewardsButtonHandler = () => {
     navigate(`/user/dashboard?cafeId=${cafeId}`);
@@ -97,7 +80,7 @@ export default function TokenPage() {
     return (
       <div className="flex flex-col space-y-2 justify-center h-screen w-screen bg-snow p-5 text-moss_green antialiased">
         <Heading
-          title={nfcError}
+          title={nfcError.toUpperCase()}
           position="center"
           className="text-4xl font-semibold"
           variant="primary"
@@ -109,7 +92,7 @@ export default function TokenPage() {
         />
       </div>
     );
-  } else if (rewardData) {
+  } else if (isAuthenticated) {
     return (
       <div className="flex flex-col  h-screen w-screen bg-snow p-5 text-moss_green antialiased">
         <div className="flex flex-col h-1/3 space-y-2 justify-start">
@@ -122,14 +105,14 @@ export default function TokenPage() {
 
           <Heading
             variant="primary"
-            title={rewardData.cafeName}
+            title={tokenData.cafeName}
             position="left"
             className=""
           />
 
           <Heading
             variant="primary"
-            title={`You have visited ${rewardData.visitCount} times`}
+            title={`You have visited ${tokenData.visitCount} times`}
             position="left"
             className="text-lg"
           />
@@ -137,21 +120,21 @@ export default function TokenPage() {
         <div className="flex flex-col h-1/3 space-y-2 justify-center">
           <Heading
             variant="primary"
-            title={`BUY ${rewardData.rewardFreq} GET 1 FREE`}
+            title={`BUY ${tokenData.rewardFreq} GET 1 FREE`}
             position="center"
             className="text-lg"
           />
 
           <TokenBar
-            total={rewardData.rewardFreq}
-            rewardCount={rewardData.tokenCount}
+            total={tokenData.rewardFreq}
+            rewardCount={tokenData.tokenCount}
           />
         </div>
-        {rewardData.validRewards && (
+        {tokenData.validRewards && (
           <div className="flex flex-col h-1/3 space-y-2 justify-end">
             <Heading
               variant="primary"
-              title={`NOTE: YOU HAVE ${rewardData.validRewards} FREE COFFEES AVAILABLE`}
+              title={`NOTE: YOU HAVE ${tokenData.validRewards} FREE COFFEES AVAILABLE`}
               position="center"
               className="text-lg animate-bounce"
             />

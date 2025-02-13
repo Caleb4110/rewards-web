@@ -5,28 +5,16 @@ import FilterBar from "../components/FilterBar";
 import Bars from "../components/svg/Bars";
 import Button from "../components/Button";
 import { useAuth0 } from "@auth0/auth0-react";
-import { getCafeDashboardData } from "../services/message.service";
+import { getCafeDashboardData } from "../services/api.service";
 import PageLoader from "../components/PageLoader";
-
-interface FilterOption {
-  value: string;
-  label: string;
-  checked: boolean;
-}
-
-interface Filter {
-  id: string;
-  title: string;
-  shown: boolean;
-  opts: FilterOption[];
-}
+import { Filter, cafeFilters } from "../models/cafePageModels";
+import { useErrorBoundary } from "react-error-boundary";
 
 export default function CafeDashboard() {
-  // Authentication stuff
-  const [accessToken, setAccessToken] = useState<any | null>(null);
-  const { user, getAccessTokenSilently, loginWithPopup, isLoading, logout } =
+  const { user, getAccessTokenSilently, isLoading, isAuthenticated, logout } =
     useAuth0();
 
+  const { showBoundary } = useErrorBoundary();
   const clientUrl = import.meta.env.VITE_AUTH0_CLIENT_URL;
 
   // Data variables
@@ -37,49 +25,25 @@ export default function CafeDashboard() {
   const [searchLoc, setSearchLoc] = useState<string>("");
   const [open, setOpen] = useState<boolean>(false);
 
-  // Get access token for requesting server data on page load
   useEffect(() => {
-    const getToken = async () => {
+    if (!user?.sub) return;
+
+    const getDashboardData = async () => {
       try {
-        const token = await getAccessTokenSilently();
-        setAccessToken(token);
-      } catch (error: any) {
-        if (
-          error.error === "login_required" ||
-          error.error === "consent_required"
-        ) {
-          loginWithPopup();
-        }
-        throw error;
-      }
-    };
-    if (!isLoading) {
-      getToken();
-    }
-  }, []);
+        const accessToken = await getAccessTokenSilently();
+        localStorage.setItem("accessToken", accessToken);
 
-  useEffect(() => {
-    if (!accessToken) return;
+        const { data } = await getCafeDashboardData(user?.sub!);
 
-    const getMessage = async () => {
-      const { data, error } = await getCafeDashboardData(
-        accessToken,
-        user?.sub,
-      );
-
-      if (data) {
         setData(data);
         setFilterData(data);
-      }
-
-      // TODO: HANDLE ERRRORS
-      if (error) {
-        console.log(error);
+      } catch (error: any) {
+        showBoundary(error);
       }
     };
 
-    getMessage();
-  }, [accessToken]);
+    getDashboardData();
+  }, [user?.sub]);
 
   // Selects all users displayed
   const handleSelectAll = () => {
@@ -119,51 +83,7 @@ export default function CafeDashboard() {
 
   type monthsKey = keyof typeof months;
 
-  const [filters, setFilters] = useState<Filter[]>([
-    {
-      id: "birth month",
-      title: "BIRTH MONTH",
-      shown: false,
-      opts: [
-        { value: "jan", label: "Jan", checked: false },
-        { value: "feb", label: "Feb", checked: false },
-        { value: "mar", label: "Mar", checked: false },
-        { value: "apr", label: "Apr", checked: false },
-        { value: "may", label: "May", checked: false },
-        { value: "jun", label: "Jun", checked: false },
-        { value: "jul", label: "Jul", checked: false },
-        { value: "aug", label: "Aug", checked: false },
-        { value: "sep", label: "Sep", checked: false },
-        { value: "oct", label: "Oct", checked: false },
-        { value: "nov", label: "Nov", checked: false },
-        { value: "dec", label: "Dec", checked: false },
-      ],
-    },
-    {
-      id: "age",
-      title: "AGE",
-      shown: false,
-      opts: [
-        { value: "18-24", label: "18-24", checked: false },
-        { value: "25-34", label: "25-34", checked: false },
-        { value: "35-44", label: "35-44", checked: false },
-        { value: "45-54", label: "45-64", checked: false },
-        { value: "55-64", label: "55-64", checked: false },
-        { value: "65+", label: "65+", checked: false },
-      ],
-    },
-    {
-      id: "visit count",
-      title: "VISIT COUNT",
-      shown: false,
-      opts: [
-        { value: "0-9", label: "0-9", checked: false },
-        { value: "10-19", label: "10-19", checked: false },
-        { value: "20-29", label: "20-29", checked: false },
-        { value: "30+", label: "30+", checked: false },
-      ],
-    },
-  ]);
+  const [filters, setFilters] = useState<Filter[]>(cafeFilters);
 
   // Handles the filtering when an option is changed
   useEffect(() => {
@@ -279,55 +199,57 @@ export default function CafeDashboard() {
   }
 
   return (
-    <div className="flex h-screen w-screen flex-col space-y-4 overflow-y-auto bg-snow p-5 text-3xl text-raisin_black">
-      <div className="flex space-x-2 w-full">
-        <Button variant="primary" onClick={handleLogout} label="LOGOUT" />
-      </div>
+    isAuthenticated && (
+      <div className="flex h-screen w-screen flex-col space-y-4 overflow-y-auto p-5 text-3xl text-raisin_black">
+        <div className="flex space-x-2 w-full">
+          <Button variant="primary" onClick={handleLogout} label="LOGOUT" />
+        </div>
 
-      <div className="flex w-full space-x-2">
-        <Button
-          onClick={handleOpen}
-          variant="primary"
-          Icon={Bars}
-          className="flex-none w-16"
-          hoverTitle="Open filters"
-        />
+        <div className="flex w-full space-x-2">
+          <Button
+            onClick={handleOpen}
+            variant="primary"
+            Icon={Bars}
+            className="flex-none w-16"
+            hoverTitle="Open filters"
+          />
 
-        <input
-          className="box-border h-full w-full rounded-md p-2 text-xl"
-          type="search"
-          placeholder="SEARCH A SUBURB..."
-          onChange={handleSearchLoc}
-        />
-      </div>
+          <input
+            className="box-border h-full w-full rounded-md p-2 text-xl"
+            type="search"
+            placeholder="SEARCH A SUBURB..."
+            onChange={handleSearchLoc}
+          />
+        </div>
 
-      <div
-        className={`fixed top-40 flex transition-opacity ease-in-out ${open ? "opacity-100" : "opacity-0"}`}
-      >
-        {open ? (
-          <FilterBar filters={filters} onChange={handleFilterChange} />
-        ) : null}
-      </div>
+        <div
+          className={`fixed top-40 flex transition-opacity ease-in-out ${open ? "opacity-100" : "opacity-0"}`}
+        >
+          {open ? (
+            <FilterBar filters={filters} onChange={handleFilterChange} />
+          ) : null}
+        </div>
 
-      <div>
-        <Button
-          onClick={handleSelectAll}
-          variant="primary"
-          label="SELECT ALL"
-        />
-      </div>
+        <div>
+          <Button
+            onClick={handleSelectAll}
+            variant="primary"
+            label="SELECT ALL"
+          />
+        </div>
 
-      <div className="box-border h-full overflow-auto rounded-md">
-        <UserList users={filterData} onChange={handleSelect} />
-      </div>
+        <div className="box-border h-full overflow-auto rounded-md">
+          <UserList users={filterData} onChange={handleSelect} />
+        </div>
 
-      <div>
-        <Button
-          onClick={handleCopy}
-          variant="primary"
-          label="COPY PHONE NUMBERS"
-        />
+        <div>
+          <Button
+            onClick={handleCopy}
+            variant="primary"
+            label="COPY PHONE NUMBERS"
+          />
+        </div>
       </div>
-    </div>
+    )
   );
 }

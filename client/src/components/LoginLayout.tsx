@@ -1,7 +1,6 @@
 import { useAuth0 } from "@auth0/auth0-react";
 import Heading from "./Heading";
 import Button from "./Button";
-import CoffeeCup from "./svg/CoffeeCup";
 
 interface Props {
   role: "user" | "cafe";

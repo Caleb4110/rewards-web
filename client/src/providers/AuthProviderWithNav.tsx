@@ -18,10 +18,6 @@ export default function Auth0ProviderWithNav({ children }: Props) {
     navigate(appState?.returnTo || window.location.pathname);
   };
 
-  if (!(domain && clientId && redirectUri)) {
-    return null;
-  }
-
   return (
     <Auth0Provider
       domain={domain}
