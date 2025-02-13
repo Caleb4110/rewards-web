@@ -1,8 +1,8 @@
 # Rewards App
 
 ## Client 
-dev: `npm run dev`
-tests: `npm run test:ui`
+- dev: `npm run dev`
+- tests: `npm run test:ui`
 
 ## Server 
-dev: `npm run dev`
+- dev: `npm run dev`
