@@ -56,7 +56,7 @@ describe("CafeDashboard", () => {
       expect(userList[i]).toHaveTextContent((62 + i).toString()); // This is based on the api handler data
     }
 
-    expect(await screen.findByText(/phone numbers/i)).toBeInTheDocument();
+    expect(await screen.findByText(/copy/i)).toBeInTheDocument();
   });
 
   it("should respond to button clicks when a button is clicked", async () => {

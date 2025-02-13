@@ -1,15 +1,17 @@
 import { useEffect, useState } from "react";
 import { WebUser_t, months, ageMap, visitMap } from "../types/user";
 import UserList from "../components/UserList";
-import FilterBar from "../components/FilterBar";
-import Bars from "../components/svg/Bars";
 import Button from "../components/Button";
 import { useAuth0 } from "@auth0/auth0-react";
 import { getCafeDashboardData } from "../services/api.service";
 import PageLoader from "../components/PageLoader";
 import { Filter, cafeFilters } from "../models/cafePageModels";
 import { useErrorBoundary } from "react-error-boundary";
+import Popup from "../components/Popup";
+import FilterList from "../components/FilterList";
+
 const clientUrl = import.meta.env.VITE_AUTH0_CLIENT_URL;
+type monthsKey = keyof typeof months;
 
 export default function CafeDashboard() {
   const { user, getAccessTokenSilently, isLoading, isAuthenticated, logout } =
@@ -20,10 +22,11 @@ export default function CafeDashboard() {
   // Data variables
   const [customers, setCustomers] = useState<any[]>([]);
   const [filteredCustomers, setFilteredCustomers] = useState<WebUser_t[]>([]);
+  const [filters, setFilters] = useState<Filter[]>(cafeFilters);
 
   // Filtering variables
   const [searchLoc, setSearchLoc] = useState<string>("");
-  const [open, setOpen] = useState<boolean>(false);
+  const [isOpen, setIsOpen] = useState<boolean>(false);
 
   useEffect(() => {
     if (!user?.sub) return;
@@ -49,12 +52,11 @@ export default function CafeDashboard() {
   const handleSelectAll = () => {
     let tempFilteredCustomers = [...filteredCustomers];
     tempFilteredCustomers.forEach((customer) => (customer.isSelected = true));
-
     setFilteredCustomers(tempFilteredCustomers);
   };
 
   // Handles selecting a user
-  const handleSelect = (event: any) => {
+  const handleSelectUser = (event: any) => {
     let tempFilterData = [...filteredCustomers];
     const phoneNum = event.target.value;
     const index = tempFilterData.findIndex(
@@ -70,6 +72,7 @@ export default function CafeDashboard() {
     setSearchLoc(e.target.value);
   };
 
+  // Handles copying selected phone numbers
   const handleCopy = () => {
     let numbers: string = "";
     filteredCustomers.forEach((customer) => {
@@ -80,10 +83,6 @@ export default function CafeDashboard() {
 
     navigator.clipboard.writeText(numbers);
   };
-
-  type monthsKey = keyof typeof months;
-
-  const [filters, setFilters] = useState<Filter[]>(cafeFilters);
 
   // Handles the filtering when an option is changed
   useEffect(() => {
@@ -175,14 +174,6 @@ export default function CafeDashboard() {
     setFilteredCustomers(tempCustomers);
   }, [filters, searchLoc]);
 
-  const handleFilterChange = (updatedFilters: Filter[]) => {
-    setFilters(updatedFilters);
-  };
-
-  const handleOpen = () => {
-    setOpen((open) => !open);
-  };
-
   const handleLogout = () => {
     logout({
       logoutParams: {
@@ -190,6 +181,7 @@ export default function CafeDashboard() {
       },
     });
   };
+
   if (isLoading) {
     return <PageLoader />;
   }
@@ -197,56 +189,63 @@ export default function CafeDashboard() {
   return (
     isAuthenticated &&
     filteredCustomers && (
-      <div className="flex h-screen w-screen flex-col space-y-4 overflow-y-auto p-5 text-3xl text-raisin_black">
-        <div className="flex space-x-2 w-full">
-          <Button variant="primary" onClick={handleLogout} label="LOGOUT" />
-        </div>
+      <>
+        <Popup
+          isOpen={isOpen}
+          closePopup={() => setIsOpen(false)}
+          element={
+            <FilterList
+              filters={filters}
+              onChange={(updatedFilters: Filter[]) =>
+                setFilters(updatedFilters)
+              }
+            />
+          }
+        />
+        <div className="flex h-screen w-screen flex-col space-y-4 overflow-y-auto p-5 text-3xl text-raisin_black">
+          <div className="flex w-full space-x-2">
+            <Button
+              onClick={() => setIsOpen(true)}
+              variant="primary"
+              label="FILTER"
+              className="flex-none w-1/2 text-xl"
+              hoverTitle="Open filters"
+            />
 
-        <div className="flex w-full space-x-2">
-          <Button
-            onClick={handleOpen}
-            variant="primary"
-            Icon={Bars}
-            className="flex-none w-16"
-            hoverTitle="Open filters"
-          />
-
+            <Button
+              variant="primary"
+              onClick={handleLogout}
+              label="LOGOUT"
+              className="text-xl w-1/2"
+            />
+          </div>
           <input
-            className="box-border h-full w-full rounded-md p-2 text-xl"
+            className="flex rounded-md border border-moss_green-400 p-2 text-2xl"
             type="search"
             placeholder="SEARCH A SUBURB..."
             onChange={handleSearchLoc}
           />
-        </div>
+          <div>
+            <Button
+              onClick={handleSelectAll}
+              variant="primary"
+              label="SELECT ALL"
+            />
+          </div>
 
-        <div
-          className={`fixed top-40 flex transition-opacity ease-in-out ${open ? "opacity-100" : "opacity-0"}`}
-        >
-          {open ? (
-            <FilterBar filters={filters} onChange={handleFilterChange} />
-          ) : null}
-        </div>
+          <div className="box-border h-full overflow-auto rounded-md">
+            <UserList users={filteredCustomers} onChange={handleSelectUser} />
+          </div>
 
-        <div>
-          <Button
-            onClick={handleSelectAll}
-            variant="primary"
-            label="SELECT ALL"
-          />
+          <div>
+            <Button
+              onClick={handleCopy}
+              variant="primary"
+              label="COPY NUMBERS"
+            />
+          </div>
         </div>
-
-        <div className="box-border h-full overflow-auto rounded-md">
-          <UserList users={filteredCustomers} onChange={handleSelect} />
-        </div>
-
-        <div>
-          <Button
-            onClick={handleCopy}
-            variant="primary"
-            label="COPY PHONE NUMBERS"
-          />
-        </div>
-      </div>
+      </>
     )
   );
 }
