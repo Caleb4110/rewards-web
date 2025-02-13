@@ -6,6 +6,7 @@ import React from "react";
 import * as auth0 from "@auth0/auth0-react";
 import { userEvent } from "@testing-library/user-event";
 import { mockAuth0 } from "../mocks/auth0Mock";
+import { mockErrorBoundary } from "../mocks/errorBoundaryMock";
 
 describe("CafeDashboard", () => {
   beforeEach(() => {
@@ -14,6 +15,10 @@ describe("CafeDashboard", () => {
     // Mock auth0
     vi.mock("@auth0/auth0-react");
     mockAuth0();
+
+    // Mock reactErrorBoundary
+    vi.mock("react-error-boundary");
+    mockErrorBoundary();
   });
 
   afterEach(() => {

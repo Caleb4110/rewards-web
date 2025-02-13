@@ -7,8 +7,6 @@ import RewardList from "../components/RewardList";
 import { DashboardReward } from "../types/user";
 import PageLoader from "../components/PageLoader";
 
-("use client");
-
 import { useErrorBoundary } from "react-error-boundary";
 const clientUrl = import.meta.env.VITE_AUTH0_CLIENT_URL;
 
@@ -83,7 +81,8 @@ export default function UserDashboard({ cafeId }: Props) {
     return <PageLoader />;
   }
   return (
-    isAuthenticated && (
+    isAuthenticated &&
+    rewards && (
       <div className="flex h-screen w-screen flex-col space-y-4 overflow-y-auto p-5 text-3xl text-raisin_black">
         <header className="flex items-center space-x-4">
           <div className="w-5/6">

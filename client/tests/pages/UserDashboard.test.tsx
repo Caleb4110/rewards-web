@@ -6,6 +6,7 @@ import React from "react";
 import * as auth0 from "@auth0/auth0-react";
 import { userEvent } from "@testing-library/user-event";
 import { mockAuth0 } from "../mocks/auth0Mock";
+import { mockErrorBoundary } from "../mocks/errorBoundaryMock";
 
 describe("UserDashboard", () => {
   beforeEach(() => {
@@ -14,6 +15,10 @@ describe("UserDashboard", () => {
     // Mock auth0
     vi.mock("@auth0/auth0-react");
     mockAuth0();
+
+    // Mock reactErrorBoundary
+    vi.mock("react-error-boundary");
+    mockErrorBoundary();
   });
 
   afterEach(() => {
@@ -41,7 +46,7 @@ describe("UserDashboard", () => {
     const headings = await screen.findAllByRole("heading");
 
     // Check headings
-    expect(headings).toHaveLength(3);
+    expect(headings).toHaveLength(4);
     expect(headings[0]).toHaveTextContent(/available/i);
     expect(headings[1]).toHaveTextContent(/must click/i);
   });
@@ -54,7 +59,7 @@ describe("UserDashboard", () => {
     expect(useRewardButton).not.toBeDisabled();
 
     const user = userEvent.setup();
-    await user.click(useRewardButton);
+    await user.dblClick(useRewardButton);
     expect(useRewardButton).toBeDisabled();
   });
 
@@ -66,7 +71,7 @@ describe("UserDashboard", () => {
     expect(auth0.useAuth0().logout).not.toBeCalled();
 
     const user = userEvent.setup();
-    await user.click(logoutButton);
+    await user.dblClick(logoutButton);
     expect(auth0.useAuth0().logout).toBeCalled();
   });
 });

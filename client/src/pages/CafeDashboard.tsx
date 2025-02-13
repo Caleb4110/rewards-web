@@ -9,17 +9,17 @@ import { getCafeDashboardData } from "../services/api.service";
 import PageLoader from "../components/PageLoader";
 import { Filter, cafeFilters } from "../models/cafePageModels";
 import { useErrorBoundary } from "react-error-boundary";
+const clientUrl = import.meta.env.VITE_AUTH0_CLIENT_URL;
 
 export default function CafeDashboard() {
   const { user, getAccessTokenSilently, isLoading, isAuthenticated, logout } =
     useAuth0();
 
   const { showBoundary } = useErrorBoundary();
-  const clientUrl = import.meta.env.VITE_AUTH0_CLIENT_URL;
 
   // Data variables
-  const [data, setData] = useState<any[]>([]);
-  const [filterData, setFilterData] = useState<WebUser_t[]>([]);
+  const [customers, setCustomers] = useState<any[]>([]);
+  const [filteredCustomers, setFilteredCustomers] = useState<WebUser_t[]>([]);
 
   // Filtering variables
   const [searchLoc, setSearchLoc] = useState<string>("");
@@ -35,8 +35,8 @@ export default function CafeDashboard() {
 
         const { data } = await getCafeDashboardData(user?.sub!);
 
-        setData(data);
-        setFilterData(data);
+        setCustomers(data);
+        setFilteredCustomers(data);
       } catch (error: any) {
         showBoundary(error);
       }
@@ -47,21 +47,21 @@ export default function CafeDashboard() {
 
   // Selects all users displayed
   const handleSelectAll = () => {
-    let tempFilterData = [...filterData];
-    tempFilterData.forEach((user) => (user.isSelected = true));
+    let tempFilteredCustomers = [...filteredCustomers];
+    tempFilteredCustomers.forEach((customer) => (customer.isSelected = true));
 
-    setFilterData(tempFilterData);
+    setFilteredCustomers(tempFilteredCustomers);
   };
 
   // Handles selecting a user
   const handleSelect = (event: any) => {
-    let tempFilterData = [...filterData];
+    let tempFilterData = [...filteredCustomers];
     const phoneNum = event.target.value;
     const index = tempFilterData.findIndex(
-      (usr) => usr.phoneNumber === phoneNum,
+      (customer) => customer.phoneNumber === phoneNum,
     );
     tempFilterData[index].isSelected = !tempFilterData[index].isSelected;
-    setFilterData(tempFilterData);
+    setFilteredCustomers(tempFilterData);
   };
 
   // Handles a location search when location filter is selected
@@ -72,9 +72,9 @@ export default function CafeDashboard() {
 
   const handleCopy = () => {
     let numbers: string = "";
-    filterData.forEach((user) => {
-      if (user.isSelected) {
-        numbers += user.phoneNumber + ",";
+    filteredCustomers.forEach((customer) => {
+      if (customer.isSelected) {
+        numbers += customer.phoneNumber + ",";
       }
     });
 
@@ -88,7 +88,7 @@ export default function CafeDashboard() {
   // Handles the filtering when an option is changed
   useEffect(() => {
     // Data that is used for the filtering
-    let tempData: WebUser_t[] = data;
+    let tempCustomers: WebUser_t[] = customers;
 
     // Records of each filter step
     let dobData: WebUser_t[] = [];
@@ -106,7 +106,7 @@ export default function CafeDashboard() {
             hasActiveFilter = true;
             const key: monthsKey = option.value as monthsKey;
             const birthMonth = months[key];
-            const newData = tempData.filter(
+            const newData = tempCustomers.filter(
               (data) => data.dob.getMonth() === birthMonth,
             );
             dobData = dobData.concat(newData);
@@ -114,7 +114,7 @@ export default function CafeDashboard() {
         });
         // This sets the new filtered data as the temp data for the other filters
         if (hasActiveFilter) {
-          tempData = dobData;
+          tempCustomers = dobData;
           hasActiveFilter = false;
         }
       } else if (filter.id === "age") {
@@ -125,7 +125,7 @@ export default function CafeDashboard() {
             hasActiveFilter = true;
             const ageRange = ageMap.get(option.value);
             if (ageRange) {
-              const newData = tempData.filter(
+              const newData = tempCustomers.filter(
                 (data) => data.age >= ageRange[0] && data.age <= ageRange[1],
               );
               ageData = ageData.concat(newData);
@@ -135,7 +135,7 @@ export default function CafeDashboard() {
 
         // This sets the new filtered data as the temp data for the other filters
         if (hasActiveFilter) {
-          tempData = ageData;
+          tempCustomers = ageData;
           hasActiveFilter = false;
         }
       } else if (filter.id === "visit count") {
@@ -146,7 +146,7 @@ export default function CafeDashboard() {
             hasActiveFilter = true;
             const visitRange = visitMap.get(option.value);
             if (visitRange) {
-              const newData = tempData.filter(
+              const newData = tempCustomers.filter(
                 (data) =>
                   data.visitCount >= visitRange[0] &&
                   data.visitCount <= visitRange[1],
@@ -158,7 +158,7 @@ export default function CafeDashboard() {
 
         // This sets the new filtered data as the temp data for the other filters
         if (hasActiveFilter) {
-          tempData = visitData;
+          tempCustomers = visitData;
           hasActiveFilter = false;
         }
       }
@@ -166,18 +166,14 @@ export default function CafeDashboard() {
 
     // Filter out locations that don't match the searched location
     if (searchLoc !== "") {
-      tempData = tempData.filter(function (data) {
+      tempCustomers = tempCustomers.filter(function (data) {
         return data.suburb.toLowerCase().indexOf(searchLoc) > -1;
       });
     }
 
     // Finally, set the filtered data to the new filtered data
-    setFilterData(tempData);
+    setFilteredCustomers(tempCustomers);
   }, [filters, searchLoc]);
-
-  useEffect(() => {
-    setFilterData(data);
-  }, [data]);
 
   const handleFilterChange = (updatedFilters: Filter[]) => {
     setFilters(updatedFilters);
@@ -199,7 +195,8 @@ export default function CafeDashboard() {
   }
 
   return (
-    isAuthenticated && (
+    isAuthenticated &&
+    filteredCustomers && (
       <div className="flex h-screen w-screen flex-col space-y-4 overflow-y-auto p-5 text-3xl text-raisin_black">
         <div className="flex space-x-2 w-full">
           <Button variant="primary" onClick={handleLogout} label="LOGOUT" />
@@ -239,7 +236,7 @@ export default function CafeDashboard() {
         </div>
 
         <div className="box-border h-full overflow-auto rounded-md">
-          <UserList users={filterData} onChange={handleSelect} />
+          <UserList users={filteredCustomers} onChange={handleSelect} />
         </div>
 
         <div>

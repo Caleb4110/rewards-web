@@ -6,7 +6,7 @@ import React from "react";
 import userEvent from "@testing-library/user-event";
 import { mockAuth0 } from "../mocks/auth0Mock";
 import { mockReactRouter } from "../mocks/reactRouterMock";
-import * as reactRouter from "react-router-dom";
+import { mockErrorBoundary } from "../mocks/errorBoundaryMock";
 
 describe("TokenPage", () => {
   beforeEach(() => {
@@ -19,6 +19,10 @@ describe("TokenPage", () => {
     // Mock reactRouter
     vi.mock("react-router-dom");
     mockReactRouter();
+
+    // Mock reactErrorBoundary
+    vi.mock("react-error-boundary");
+    mockErrorBoundary();
   });
 
   afterEach(() => {

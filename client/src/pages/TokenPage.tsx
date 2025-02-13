@@ -92,7 +92,7 @@ export default function TokenPage() {
         />
       </div>
     );
-  } else if (isAuthenticated) {
+  } else if (isAuthenticated && tokenData) {
     return (
       <div className="flex flex-col  h-screen w-screen p-5 text-moss_green antialiased">
         <div className="flex flex-col h-1/3 space-y-2 justify-start">
