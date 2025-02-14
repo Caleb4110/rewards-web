@@ -8,6 +8,8 @@ import { DashboardReward } from "../types/user";
 import PageLoader from "../components/PageLoader";
 
 import { useErrorBoundary } from "react-error-boundary";
+import Popup from "../components/Popup";
+import BugForm from "../components/BugForm";
 const clientUrl = import.meta.env.VITE_AUTH0_CLIENT_URL;
 
 interface Props {
@@ -19,6 +21,7 @@ export default function UserDashboard({ cafeId }: Props) {
   const { user, isAuthenticated, getAccessTokenSilently, isLoading, logout } =
     useAuth0();
   const { showBoundary } = useErrorBoundary();
+  const [isOpen, setIsOpen] = useState<boolean>(false);
 
   useEffect(() => {
     if (!user?.sub) return;
@@ -83,28 +86,43 @@ export default function UserDashboard({ cafeId }: Props) {
   return (
     isAuthenticated &&
     rewards && (
-      <div className="flex h-screen w-screen flex-col space-y-4 overflow-y-auto p-5 text-3xl text-raisin_black">
-        <header className="flex items-center space-x-4">
-          <div className="w-5/6">
+      <div className="flex h-screen w-screen flex-col">
+        <Popup
+          isOpen={isOpen}
+          closePopup={() => setIsOpen(false)}
+          element={<BugForm />}
+        />
+        <div className="flex h-full w-full flex-col space-y-4 overflow-y-auto p-5 text-3xl text-raisin_black">
+          <header className="flex  space-x-4">
+            <Button
+              variant="minimal"
+              onClick={() => setIsOpen(true)}
+              label="REPORT A BUG"
+              className="w-1/2 text-lg"
+            />
+
+            <Button
+              className="w-1/2 text-lg"
+              onClick={handleLogout}
+              label="LOGOUT"
+              variant="secondary"
+            />
+          </header>
+          <div>
             <Heading
               variant="primary"
               position="center"
               title="AVAILABLE REWARDS"
             />
           </div>
-          <Button
-            className="w-32 h-16"
-            onClick={handleLogout}
-            label="LOGOUT"
+          <Heading
             variant="secondary"
+            position="center"
+            title="NOTE: Staff member must double click on reward to use it"
+            className="text-red-700"
           />
-        </header>
-        <Heading
-          variant="secondary"
-          position="center"
-          title="NOTE: Staff member must click on reward to use it"
-        />
-        <RewardList rewards={rewards} buttonHandler={buttonHandler} />
+          <RewardList rewards={rewards} buttonHandler={buttonHandler} />
+        </div>
       </div>
     )
   );

@@ -9,15 +9,6 @@ import { useNavigate } from "react-router-dom";
 import PageLoader from "../components/PageLoader";
 import { useErrorBoundary } from "react-error-boundary";
 
-//  ETRNL err code options:
-//    ctrBehind - The URL has expired and is no longer valid.
-//    uidMismatch - The encrypted UID did not match the UID stored in our database for the tag ID. The encrypted data was probably tampered with.
-//    cmacMismatch - CMAC signature check did not succeed. The CMAC was probably tampered with.
-//    doesNotExist - The tag ID is invalid and does not exist in our database.
-//    inactive - The tag has been marked as inactive in our database. This is probably a result of a tag that hasn’t been completely programmed.
-//    unauthorized - The tag does not belong to your organization.
-//
-
 // TODO: Add cafe info functionality
 export default function TokenPage() {
   const [nfcError, setNfcError] = useState<string | null>(null);

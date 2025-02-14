@@ -9,6 +9,7 @@ import { Filter, cafeFilters } from "../models/cafePageModels";
 import { useErrorBoundary } from "react-error-boundary";
 import Popup from "../components/Popup";
 import FilterList from "../components/FilterList";
+import BugForm from "../components/BugForm";
 
 const clientUrl = import.meta.env.VITE_AUTH0_CLIENT_URL;
 type monthsKey = keyof typeof months;
@@ -27,6 +28,7 @@ export default function CafeDashboard() {
   // Filtering variables
   const [searchLoc, setSearchLoc] = useState<string>("");
   const [isOpen, setIsOpen] = useState<boolean>(false);
+  const [openReport, setOpenReport] = useState<boolean>(false);
 
   useEffect(() => {
     if (!user?.sub) return;
@@ -191,6 +193,11 @@ export default function CafeDashboard() {
     filteredCustomers && (
       <>
         <Popup
+          isOpen={openReport}
+          closePopup={() => setOpenReport(false)}
+          element={<BugForm />}
+        />
+        <Popup
           isOpen={isOpen}
           closePopup={() => setIsOpen(false)}
           element={
@@ -208,7 +215,7 @@ export default function CafeDashboard() {
               onClick={() => setIsOpen(true)}
               variant="primary"
               label="FILTER"
-              className="flex-none w-1/2 text-xl"
+              className="w-1/2 text-xl"
               hoverTitle="Open filters"
             />
 
@@ -237,11 +244,18 @@ export default function CafeDashboard() {
             <UserList users={filteredCustomers} onChange={handleSelectUser} />
           </div>
 
-          <div>
+          <div className="flex space-x-2">
             <Button
               onClick={handleCopy}
               variant="primary"
               label="COPY NUMBERS"
+              className="text-lg"
+            />
+            <Button
+              variant="minimal"
+              onClick={() => setOpenReport(true)}
+              label="REPORT A BUG"
+              className="text-lg"
             />
           </div>
         </div>

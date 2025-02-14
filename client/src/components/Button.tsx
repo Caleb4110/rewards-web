@@ -1,5 +1,5 @@
 interface Props {
-  variant: "primary" | "secondary" | "disabled";
+  variant: "primary" | "secondary" | "minimal";
   Icon?: React.ComponentType;
   label?: string;
   onClick?: ((e: any) => void) | (() => void);
@@ -22,7 +22,11 @@ export default function Button({
   hoverTitle,
 }: Props) {
   const bgColour =
-    variant === "primary" ? "bg-moss_green-400" : "bg-moss_green-500";
+    variant === "primary"
+      ? "bg-moss_green-400"
+      : variant === "secondary"
+        ? "bg-moss_green-500"
+        : "bg-red-800";
 
   return (
     <button

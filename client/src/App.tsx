@@ -8,47 +8,55 @@ import UserDashboard from "./pages/UserDashboard";
 import LoginUserReward from "./pages/LoginUserReward";
 import TokenPage from "./pages/TokenPage";
 import Callback from "./pages/Callback";
+import Button from "./components/Button";
+import { useState } from "react";
+import Popup from "./components/Popup";
+import BugForm from "./components/BugForm";
 
 function App() {
+  const [isOpen, setIsOpen] = useState<boolean>(false);
+
   return (
-    <Routes>
-      <Route path="/auth/dashboard" element={<LoginUserDashboard />} />
-      <Route path="/auth/reward" element={<LoginUserReward />} />
-      <Route path="/auth/cafe" element={<LoginCafe />} />
-      <Route
-        path="/cafe/dashboard"
-        element={
-          <AuthenticationGuard
-            component={CafeDashboard}
-            redirectTo={"/auth/dashboard"}
-            role={"cafe"}
-          />
-        }
-      />
-      <Route
-        path="/user/dashboard"
-        element={
-          <AuthenticationGuard
-            component={UserDashboard}
-            redirectTo={"/auth/cafe"}
-            role={"user"}
-          />
-        }
-      />
-      <Route
-        path="/user/token"
-        element={
-          <AuthenticationGuard
-            component={TokenPage}
-            redirectTo={"/auth/cafe"}
-            role={"user"}
-          />
-        }
-      />
-      <Route path="/callback" Component={Callback} />
-      {/* NOT FOUND ROUTE */}
-      <Route path="*" element={<NotFoundPage />} />
-    </Routes>
+    <div>
+      <Routes>
+        <Route path="/auth/dashboard" element={<LoginUserDashboard />} />
+        <Route path="/auth/reward" element={<LoginUserReward />} />
+        <Route path="/auth/cafe" element={<LoginCafe />} />
+        <Route
+          path="/cafe/dashboard"
+          element={
+            <AuthenticationGuard
+              component={CafeDashboard}
+              redirectTo={"/auth/dashboard"}
+              role={"cafe"}
+            />
+          }
+        />
+        <Route
+          path="/user/dashboard"
+          element={
+            <AuthenticationGuard
+              component={UserDashboard}
+              redirectTo={"/auth/cafe"}
+              role={"user"}
+            />
+          }
+        />
+        <Route
+          path="/user/token"
+          element={
+            <AuthenticationGuard
+              component={TokenPage}
+              redirectTo={"/auth/cafe"}
+              role={"user"}
+            />
+          }
+        />
+        <Route path="/callback" Component={Callback} />
+        {/* NOT FOUND ROUTE */}
+        <Route path="*" element={<NotFoundPage />} />
+      </Routes>
+    </div>
   );
 }
 
