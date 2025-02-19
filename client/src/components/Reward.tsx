@@ -25,7 +25,7 @@ export default function Reward({ id, cafeName, isValid, onUse }: Props) {
       />
       <Button
         id={id}
-        variant={isValid === true ? "primary" : "disabled"}
+        variant={isValid === true ? "primary" : "secondary"}
         disabled={!isValid}
         label={isValid ? "REDEEM" : "USED"}
         onDoubleClick={onUse}

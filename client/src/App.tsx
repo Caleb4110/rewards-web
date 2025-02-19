@@ -8,14 +8,8 @@ import UserDashboard from "./pages/UserDashboard";
 import LoginUserReward from "./pages/LoginUserReward";
 import TokenPage from "./pages/TokenPage";
 import Callback from "./pages/Callback";
-import Button from "./components/Button";
-import { useState } from "react";
-import Popup from "./components/Popup";
-import BugForm from "./components/BugForm";
 
 function App() {
-  const [isOpen, setIsOpen] = useState<boolean>(false);
-
   return (
     <div>
       <Routes>

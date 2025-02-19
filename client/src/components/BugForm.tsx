@@ -1,8 +1,5 @@
 import { useState } from "react";
 import Button from "./Button";
-import Heading from "./Heading";
-import ChevronDown from "./svg/ChevronDown";
-import ChevronUp from "./svg/ChevronUp";
 import {
   osName,
   osVersion,
