@@ -1,4 +1,4 @@
-import { ReactInstance, ReactNode } from "react";
+import { ReactNode } from "react";
 
 interface Props {
   isOpen: boolean;
