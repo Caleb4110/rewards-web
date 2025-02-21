@@ -8,6 +8,8 @@ import Button from "../components/Button";
 import { useNavigate } from "react-router-dom";
 import PageLoader from "../components/PageLoader";
 import { useErrorBoundary } from "react-error-boundary";
+import Popup from "../components/Popup";
+import BugForm from "../components/BugForm";
 
 // TODO: Add cafe info functionality
 export default function TokenPage() {
@@ -16,6 +18,7 @@ export default function TokenPage() {
   const { getAccessTokenSilently, isAuthenticated, isLoading, user } =
     useAuth0();
   const { showBoundary } = useErrorBoundary();
+  const [isOpen, setIsOpen] = useState<boolean>(false);
 
   // NOTE: TEMPORARY FOR TESTING
   const cafeId = "auth0|67885176fbd7752104ce68c7";
@@ -86,6 +89,11 @@ export default function TokenPage() {
   } else if (isAuthenticated && tokenData) {
     return (
       <div className="flex flex-col  h-screen w-screen p-5 text-moss_green antialiased">
+        <Popup
+          isOpen={isOpen}
+          closePopup={() => setIsOpen(false)}
+          element={<BugForm />}
+        />
         <div className="flex flex-col h-1/3 space-y-2 justify-start">
           <Heading
             variant="secondary"
@@ -121,21 +129,29 @@ export default function TokenPage() {
             rewardCount={tokenData.tokenCount}
           />
         </div>
-        {tokenData.validRewards && (
-          <div className="flex flex-col h-1/3 space-y-2 justify-end">
-            <Heading
-              variant="primary"
-              title={`NOTE: YOU HAVE ${tokenData.validRewards} FREE COFFEES AVAILABLE`}
-              position="center"
-              className="text-lg animate-bounce"
-            />
-            <Button
-              label="CLICK HERE TO VIEW"
-              variant="primary"
-              onClick={rewardsButtonHandler}
-            />
-          </div>
-        )}
+        <div className="flex flex-col h-1/3 space-y-2 justify-end">
+          {tokenData.validRewards ? (
+            <>
+              <Heading
+                variant="primary"
+                title={`NOTE: YOU HAVE ${tokenData.validRewards} FREE COFFEES AVAILABLE`}
+                position="center"
+                className="text-lg animate-bounce"
+              />
+              <Button
+                label="CLICK HERE TO VIEW"
+                variant="primary"
+                onClick={rewardsButtonHandler}
+              />
+            </>
+          ) : null}
+          <Button
+            variant="minimal"
+            onClick={() => setIsOpen(true)}
+            label="REPORT A BUG"
+            className="w-1/2 text-lg"
+          />
+        </div>
       </div>
     );
   }

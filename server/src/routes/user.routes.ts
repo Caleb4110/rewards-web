@@ -21,6 +21,10 @@ userRouter.get("/get", checkJwt, tryCatch(getUser));
 
 userRouter.get("/rewards", checkJwt, tryCatch(getUserRewards));
 
-userRouter.get("/scan", checkJwt, tryCatch(verifyTag), tryCatch(getUserTokens));
+userRouter.get(
+  "/scan",
+  checkJwt,
+  /*tryCatch(verifyTag),*/ tryCatch(getUserTokens),
+);
 
 export default userRouter;

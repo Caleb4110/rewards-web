@@ -8,6 +8,7 @@ interface Props {
   className?: string;
   id?: string;
   hoverTitle?: string;
+  type?: "submit" | "reset" | "button";
 }
 
 export default function Button({
@@ -20,6 +21,7 @@ export default function Button({
   className = "",
   id,
   hoverTitle,
+  type,
 }: Props) {
   const bgColour =
     variant === "primary"
@@ -35,6 +37,7 @@ export default function Button({
       onClick={onClick && onClick}
       onDoubleClick={onDoubleClick && onDoubleClick}
       disabled={disabled}
+      type={type}
       className={
         "w-full rounded-md p-4 text-snow shadow-sm shadow-moss_green-500/80 hover:bg-moss_green-300 active:bg-moss_green-200 disabled:bg-neutral-300 disabled:text-neutral-400 disabled:shadow-neutral-400/80 disabled:cursor-not-allowed " +
         className +
