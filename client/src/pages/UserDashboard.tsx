@@ -76,7 +76,7 @@ export default function UserDashboard({ cafeId }: Props) {
   const handleLogout = () => {
     logout({
       logoutParams: {
-        returnTo: `${clientUrl}auth/dashboard`,
+        returnTo: `${clientUrl}/auth/dashboard`,
       },
     });
   };

@@ -179,7 +179,7 @@ export default function CafeDashboard() {
   const handleLogout = () => {
     logout({
       logoutParams: {
-        returnTo: `${clientUrl}auth/cafe`,
+        returnTo: `${clientUrl}/auth/cafe`,
       },
     });
   };
