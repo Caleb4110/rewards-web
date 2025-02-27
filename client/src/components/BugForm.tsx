@@ -37,73 +37,73 @@ export default function FilterList() {
   };
 
   return (
-    <div className="flex w-full h-full space-y-3 flex-col justify-between  text-raisin_black ">
-      <form
-        onSubmit={onSubmit}
-        className="flex flex-col w-full h-full space-y-3"
-      >
-        <div className="flex flex-col">
-          <label htmlFor="Bug Description">Bug Description</label>
-          <textarea
-            name="Bug Description"
-            className="h-full rounded-md p-1 border border-raisin_black"
-            placeholder="Describe the bug..."
-            required
-          />
-        </div>
-        <div className="flex space-x-1 items-center">
-          <label htmlFor="OS">OS:</label>
-          <input
-            name="OS"
-            readOnly={true}
-            className="p-1 rounded-md border border-raisin_black"
-            value={osName}
-            required
-          />
-        </div>
-        <div className="flex space-x-1 items-center">
-          <label htmlFor="OS Version">OS Version:</label>
-          <input
-            name="OS Version"
-            readOnly={true}
-            className="p-1 rounded-md border border-raisin_black"
-            value={osVersion}
-            required
-          />
-        </div>
-        <div className="flex space-x-1 items-center">
-          <label htmlFor="Browser">Browser:</label>
-          <input
-            name="Browser"
-            readOnly={true}
-            className="p-1 rounded-md border border-raisin_black"
-            value={browserName}
-            required
-          />
-        </div>
-        <div className="flex space-x-1 items-center">
-          <label htmlFor="Browser Version">Browser Version:</label>
-          <input
-            name="Browser Version"
-            readOnly={true}
-            className="p-1 rounded-md border border-raisin_black"
-            value={browserVersion}
-            required
-          />
-        </div>
-        <div className="flex space-x-1 items-center">
-          <label htmlFor="Device Type">Device Type:</label>
-          <input
-            name="Device Type"
-            readOnly={true}
-            className="p-1 rounded-md border border-raisin_black"
-            value={mobileOrDesktop}
-            required
-          />
-        </div>
+    <form
+      onSubmit={onSubmit}
+      className="flex flex-col w-full h-full space-y-3 text-raisin_black"
+    >
+      <div className="flex flex-col h-5/6">
+        <label htmlFor="Bug Description">Bug Description</label>
+        <textarea
+          name="Bug Description"
+          className="h-full rounded-md p-1 border border-raisin_black"
+          placeholder="Describe the bug..."
+          required
+        />
+      </div>
+      <div className="flex space-x-1 items-center">
+        <label htmlFor="OS">OS:</label>
+        <input
+          name="OS"
+          readOnly={true}
+          className="p-1 rounded-md border border-raisin_black"
+          value={osName}
+          required
+        />
+      </div>
+      <div className="flex space-x-1 items-center">
+        <label htmlFor="OS Version">OS Version:</label>
+        <input
+          name="OS Version"
+          readOnly={true}
+          className="p-1 rounded-md border border-raisin_black"
+          value={osVersion}
+          required
+        />
+      </div>
+      <div className="flex space-x-1 items-center">
+        <label htmlFor="Browser">Browser:</label>
+        <input
+          name="Browser"
+          readOnly={true}
+          className="p-1 rounded-md border border-raisin_black"
+          value={browserName}
+          required
+        />
+      </div>
+      <div className="flex space-x-1 items-center">
+        <label htmlFor="Browser Version">Browser Version:</label>
+        <input
+          name="Browser Version"
+          readOnly={true}
+          className="p-1 rounded-md border border-raisin_black"
+          value={browserVersion}
+          required
+        />
+      </div>
+      <div className="flex space-x-1 items-center">
+        <label htmlFor="Device Type">Device Type:</label>
+        <input
+          name="Device Type"
+          readOnly={true}
+          className="p-1 rounded-md border border-raisin_black"
+          value={mobileOrDesktop}
+          required
+        />
+      </div>
+      <div className="h-full content-end">
+        <span>{result}</span>
         <Button type="submit" variant="primary" label="SUBMIT" />
-      </form>
-      <span>{result}</span>
-    </div>
+      </div>
+    </form>
   );
 }

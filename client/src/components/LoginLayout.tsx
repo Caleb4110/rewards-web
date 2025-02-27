@@ -29,7 +29,7 @@ export default function LoginLayout({ role, returnTo, pageHeading }: Props) {
   };
 
   return (
-    <div className="flex flex-col h-screen space-y-2 justify-start">
+    <div className="flex flex-col box-border h-full space-y-2 justify-between">
       <Popup
         isOpen={isOpen}
         closePopup={() => setIsOpen(false)}
@@ -41,22 +41,19 @@ export default function LoginLayout({ role, returnTo, pageHeading }: Props) {
         title={pageHeading}
         className="text-2xl"
       />
-      <Heading
-        variant="secondary"
-        position="center"
-        title="You will be redirected to the login form once pressed"
-      />
-      <Button variant="primary" onClick={handleLogin} label="LOGIN" />
-      {/*<CoffeeCup />*/}
-
-      <div className="flex flex-col h-full justify-end">
-        <Button
-          variant="minimal"
-          onClick={() => setIsOpen(true)}
-          label="REPORT A BUG"
-          className="w-1/2 "
+      <div className="flex flex-col space-y-2">
+        <Button variant="primary" onClick={handleLogin} label="LOGIN" />
+        <Heading
+          variant="secondary"
+          position="center"
+          title="You will be redirected to the login form once pressed"
         />
       </div>
+      <Button
+        variant="minimal"
+        onClick={() => setIsOpen(true)}
+        label="REPORT A BUG"
+      />
     </div>
   );
 }
