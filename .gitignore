@@ -28,3 +28,6 @@ compose.yaml
 ssl
 
 notes.md
+
+# Local Netlify folder
+.netlify

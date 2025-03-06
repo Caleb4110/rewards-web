@@ -9,6 +9,8 @@ require("dotenv").config();
 
 export const addToDb = async (req: Request, res: Response) => {
   const { user, role, secret } = req.body;
+  console.log("HERE");
+  console.log(user);
 
   if (secret !== process.env.AUTH0_HOOK_SECRET) {
     throw new ServerError(INVALID_TOKEN, "Invalid hook secret", 401);
