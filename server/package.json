@@ -7,7 +7,7 @@
     "dev": "tsx watch src/server.ts",
     "build": "tsc",
     "start": "node dist/server.js",
-    "migrate": "npx sequelize-cli db:migrate",
+    "migrate": "npx tsx ./node_modules/.bin/sequelize db:migrate",
     "seed": "npx sequelize-cli db:seed:all"
   },
   "keywords": [],
