@@ -11,7 +11,6 @@ import { useErrorBoundary } from "react-error-boundary";
 import Popup from "../components/Popup";
 import BugForm from "../components/BugForm";
 
-// TODO: Add cafe info functionality
 export default function TokenPage() {
   const [nfcError, setNfcError] = useState<string | null>(null);
   const [tokenData, setTokenData] = useState<any | null>(null);
@@ -20,7 +19,9 @@ export default function TokenPage() {
   const { showBoundary } = useErrorBoundary();
   const [isOpen, setIsOpen] = useState<boolean>(false);
 
-  // NOTE: TEMPORARY FOR TESTING
+  // TODO: TEMPORARY FOR TESTING
+  // Eventually the cafeId will be fetched from scanning the tag,
+  // and the verifyTag route will add the cafeId to the request
   const cafeId = "auth0|67885176fbd7752104ce68c7";
 
   const navigate = useNavigate();

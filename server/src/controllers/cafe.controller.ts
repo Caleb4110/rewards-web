@@ -7,15 +7,14 @@ const { Cafe, Reward, User } = db;
 import { DB_DATA_EMPTY } from "../models/errorCodes";
 import ServerError from "../utils/serverError";
 
-// Retrieve a cafe from email
+// Retrieve a cafe from id
 // When a cafe is not found, return nothing
-// TODO: Decide whether to find cafes based on id OR email. (depends on which will be stored on the cafes tag)
 export const cafe = async (req: Request, res: Response) => {
-  const { email } = req.query;
+  const { id } = req.query;
 
   const cafe = await Cafe.findOne({
     where: {
-      email: email,
+      id: id,
     },
     attributes: { exclude: ["password", "createdAt", "updatedAt"] },
   });

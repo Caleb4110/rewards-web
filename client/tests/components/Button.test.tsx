@@ -17,8 +17,6 @@ describe("Button", () => {
 
   it("should render icon when icon is given", () => {
     render(<Button variant="primary" Icon={Bars} />);
-
-    // TODO: get svg
   });
 
   it("shouldn't render label if no label is given", () => {

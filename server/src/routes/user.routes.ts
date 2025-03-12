@@ -17,7 +17,6 @@ export const checkJwt = auth({
 
 const userRouter = express.Router();
 
-// TODO: add checkJwt here
 userRouter.get("/get", checkJwt, tryCatch(getUser));
 
 userRouter.get("/rewards", checkJwt, tryCatch(getUserRewards));

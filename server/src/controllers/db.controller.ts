@@ -16,8 +16,7 @@ export const addToDb = async (req: Request, res: Response) => {
   const usr = user as Auth0User;
 
   // If the user is a regular user, add to the user table
-  // NOTE:
-  // Date of birth and location are added when a user reaches their first reward
+  // NOTE: Date of birth and location are added when a user reaches their first reward
   if (role === "user" && usr.phone_number) {
     await User.create({
       id: usr.user_id,
@@ -29,7 +28,6 @@ export const addToDb = async (req: Request, res: Response) => {
   }
 
   // If the user is a cafe, add to the cafe table
-  // TODO: Add email to cafe form in AUTH0
   else if (role === "cafe" && usr.phone_number && usr.user_metadata.cafe_name) {
     await Cafe.create({
       id: usr.user_id,

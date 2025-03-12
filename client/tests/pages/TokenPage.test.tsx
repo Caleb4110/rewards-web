@@ -38,8 +38,6 @@ describe("TokenPage", () => {
     expect(await screen.findByText(/time/i)).toBeInTheDocument();
     expect(await screen.findByText(/buy/i)).toBeInTheDocument();
 
-    // TODO: Figure out how to do token bar tests in here
-
     expect(await screen.findByText(/available/i)).toBeInTheDocument();
 
     expect(await screen.findByRole("button")).toBeInTheDocument();
