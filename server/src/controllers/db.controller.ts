@@ -5,8 +5,6 @@ import { Auth0User } from "../models/auth0UserModel";
 import db from "../models";
 const { Cafe, User } = db;
 
-require("dotenv").config();
-
 export const addToDb = async (req: Request, res: Response) => {
   const { user, role, secret } = req.body;
   console.log("HERE");

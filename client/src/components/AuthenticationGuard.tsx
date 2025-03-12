@@ -14,12 +14,14 @@ export default function AuthenticationGuard({
   redirectTo,
   role,
 }: Props) {
+  console.log("ROLE: ", role);
   const { getIdTokenClaims, isLoading } = useAuth0();
   const navigate = useNavigate();
 
   useEffect(() => {
     const getClaims = async () => {
       const claims = await getIdTokenClaims();
+      console.log(claims);
       if (
         !claims?.["https://rewards.com/roles"]?.includes(role) &&
         !isLoading

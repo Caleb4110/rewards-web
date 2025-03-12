@@ -7,8 +7,6 @@ const { Cafe, Reward, User } = db;
 import { DB_DATA_EMPTY } from "../models/errorCodes";
 import ServerError from "../utils/serverError";
 
-require("dotenv").config();
-
 // Retrieve a cafe from email
 // When a cafe is not found, return nothing
 // TODO: Decide whether to find cafes based on id OR email. (depends on which will be stored on the cafes tag)

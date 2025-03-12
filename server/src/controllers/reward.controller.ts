@@ -8,10 +8,6 @@ import {
 import db from "../models";
 const { Cafe, Reward, User } = db;
 
-require("dotenv").config();
-
-// TODO: Check if valid user and valid cafe
-// Updates or creates the reward associated with userId and cafeId
 export const updateReward = async (req: Request, res: Response) => {
   const { userId, cafeId } = req.body;
 

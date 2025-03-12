@@ -7,6 +7,7 @@ import {
   getUserTokens,
 } from "../controllers/user.controller";
 import { verifyTag } from "../middleware/verifyTag";
+import { updateReward } from "../controllers/reward.controller";
 
 export const checkJwt = auth({
   audience: process.env.AUTH0_AUDIENCE,
@@ -23,8 +24,10 @@ userRouter.get("/rewards", checkJwt, tryCatch(getUserRewards));
 
 userRouter.get(
   "/scan",
-  checkJwt,
-  /*tryCatch(verifyTag),*/ tryCatch(getUserTokens),
+  checkJwt, // 1) Check if the refresh token is valid
+  /*tryCatch(verifyTag),*/ // 2) Verify the tag scan was valid
+  tryCatch(updateReward), // 3) Update the reward entry
+  tryCatch(getUserTokens), // 4) Compile the cafe info and token info into one object and return it
 );
 
 export default userRouter;

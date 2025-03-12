@@ -6,8 +6,6 @@ const { Cafe, Reward, User } = db;
 import { DB_DATA_EMPTY, MISSING_PARAMETER } from "../models/errorCodes";
 import ServerError from "../utils/serverError";
 
-require("dotenv").config();
-
 /**
  * Fetches all information associated with a user
  *
