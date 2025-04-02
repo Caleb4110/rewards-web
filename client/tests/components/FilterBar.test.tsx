@@ -1,6 +1,6 @@
 import { it, expect, describe } from "vitest";
 import { render, screen } from "@testing-library/react";
-import FilterBar from "../../src/components/FilterBar";
+import FilterList from "../../src/components/FilterList";
 import "@testing-library/jest-dom/vitest";
 import React from "react";
 import { userEvent } from "@testing-library/user-event";
@@ -48,7 +48,7 @@ const onChange = () => {
 
 describe("Button", () => {
   it("should render appropriate filters", async () => {
-    render(<FilterBar filters={filters} onChange={onChange} />);
+    render(<FilterList filters={filters} onChange={onChange} />);
 
     const button = screen.getByText(/clear/i);
     expect(button).toBeInTheDocument();
@@ -61,7 +61,7 @@ describe("Button", () => {
   });
 
   it("should expand/minimise filter options when filter is clicked", async () => {
-    render(<FilterBar filters={filters} onChange={onChange} />);
+    render(<FilterList filters={filters} onChange={onChange} />);
 
     const filterButton = screen.getByTitle("one");
     console.log(filterButton);

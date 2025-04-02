@@ -40,7 +40,9 @@ describe("TokenPage", () => {
 
     expect(await screen.findByText(/available/i)).toBeInTheDocument();
 
-    expect(await screen.findByRole("button")).toBeInTheDocument();
+    expect(await screen.findByText(/click here/i)).toBeInTheDocument();
+
+    expect(await screen.findByText(/report/i)).toBeInTheDocument();
   });
 
   it("should register button click", async () => {
@@ -49,7 +51,7 @@ describe("TokenPage", () => {
 
     render(<TokenPage />);
 
-    const button = await screen.findByRole("button");
+    const button = await screen.findByText(/click here/i);
     expect(button).toBeInTheDocument();
 
     const user = userEvent.setup();

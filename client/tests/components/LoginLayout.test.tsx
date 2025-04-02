@@ -30,9 +30,8 @@ describe("LoginLayout", () => {
 
     expect(screen.getByText(/loginlayout heading/i)).toBeInTheDocument();
     expect(screen.getByText(/redirected/i)).toBeInTheDocument();
-    const button = screen.getByRole("button");
-    expect(button).toBeInTheDocument();
-    expect(button).toHaveTextContent(/login/i);
+    const buttons = screen.getAllByRole("button");
+    expect(buttons.length).toBe(2);
   });
 
   it("should call loginWithRedirect on login button click", async () => {
@@ -44,7 +43,7 @@ describe("LoginLayout", () => {
       />,
     );
 
-    const button = screen.getByRole("button");
+    const button = screen.getByText(/LOGIN/);
     const user = userEvent.setup();
     await user.click(button);
     expect(auth0.useAuth0().loginWithRedirect).toBeCalled();

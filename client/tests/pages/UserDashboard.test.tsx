@@ -48,7 +48,7 @@ describe("UserDashboard", () => {
     // Check headings
     expect(headings).toHaveLength(4);
     expect(headings[0]).toHaveTextContent(/available/i);
-    expect(headings[1]).toHaveTextContent(/must click/i);
+    expect(headings[1]).toHaveTextContent(/must double click/i);
   });
 
   it("should render updates after button press", async () => {

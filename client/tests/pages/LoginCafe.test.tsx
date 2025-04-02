@@ -10,8 +10,7 @@ describe("LoginCafe", () => {
 
     expect(screen.getByText(/cafe dashboard/i)).toBeInTheDocument();
     expect(screen.getByText(/redirected/i)).toBeInTheDocument();
-    const button = screen.getByRole("button");
-    expect(button).toBeInTheDocument();
-    expect(button).toHaveTextContent(/login/i);
+    const buttons = screen.getAllByRole("button");
+    expect(buttons.length).toBe(2);
   });
 });
