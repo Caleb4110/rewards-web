@@ -25,7 +25,7 @@ userRouter.get(
   "/scan",
   checkJwt, // 1) Check if the refresh token is valid
   /*tryCatch(verifyTag),*/ // 2) Verify the tag scan was valid
-  tryCatch(updateReward), // 3) Update the reward entry
+  //tryCatch(updateReward), // 3) Update the reward entry
   tryCatch(getUserTokens), // 4) Compile the cafe info and token info into one object and return it
 );
 

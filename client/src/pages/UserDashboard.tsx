@@ -33,7 +33,7 @@ export default function UserDashboard({ cafeId }: Props) {
 
         const { data } = await getUserDashboardData(
           user.sub!,
-          cafeId || "auth0|67885176fbd7752104ce68c7",
+          cafeId || "auth0|68252edb58aa13d45a5699d7",
         );
         setRewards(data);
       } catch (error: any) {
@@ -45,6 +45,7 @@ export default function UserDashboard({ cafeId }: Props) {
   }, [user?.sub]);
 
   const buttonHandler = (e: any) => {
+    console.log("HERE")
     const redeemReward = async () => {
       try {
         // Update reward in database
@@ -66,6 +67,7 @@ export default function UserDashboard({ cafeId }: Props) {
         tempRewards.splice(index, 1);
         tempRewards.push(updatedReward);
         setRewards(tempRewards);
+        console.log(tempRewards)
       } catch (error: any) {
         showBoundary(error);
       }

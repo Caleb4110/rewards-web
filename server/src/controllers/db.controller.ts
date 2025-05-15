@@ -7,8 +7,6 @@ const { Cafe, User } = db;
 
 export const addToDb = async (req: Request, res: Response) => {
   const { user, role, secret } = req.body;
-  console.log("HERE");
-  console.log(user);
 
   if (secret !== process.env.AUTH0_HOOK_SECRET) {
     throw new ServerError(INVALID_TOKEN, "Invalid hook secret", 401);
@@ -24,6 +22,7 @@ export const addToDb = async (req: Request, res: Response) => {
       dob: usr.user_metadata.dob,
       suburb: usr.user_metadata.suburb,
     });
+
     return res.status(201).send("User created");
   }
 
@@ -35,8 +34,9 @@ export const addToDb = async (req: Request, res: Response) => {
       name: usr.user_metadata.cafe_name,
       rewardFreq: usr.user_metadata.reward_freq,
       // NOTE: unrequired for demo
-      // paid_at: usr.paid_at
+      // paid_at: usr.paid_atA
     });
+
     return res.status(201).send("Cafe created");
   }
 

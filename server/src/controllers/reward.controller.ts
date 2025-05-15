@@ -9,7 +9,7 @@ import db from "../models";
 const { Cafe, Reward, User } = db;
 
 export const updateReward = async (req: Request, res: Response) => {
-  const { userId, cafeId } = req.body;
+  const { userId, cafeId } = req.query;
 
   const cafe = await Cafe.findOne({
     where: {

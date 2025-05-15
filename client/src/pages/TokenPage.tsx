@@ -22,11 +22,12 @@ export default function TokenPage() {
   // TODO: TEMPORARY FOR TESTING
   // Eventually the cafeId will be fetched from scanning the tag,
   // and the verifyTag route will add the cafeId to the request
-  const cafeId = "auth0|67885176fbd7752104ce68c7";
+  const cafeId = "auth0|68252edb58aa13d45a5699d7";
 
   const navigate = useNavigate();
 
   useEffect(() => {
+    console.log(user?.sub)
     if (!user?.sub) return;
 
     const getTokens = async () => {
@@ -51,6 +52,7 @@ export default function TokenPage() {
         );
 
         setTokenData(data);
+        console.log(data)
       } catch (error: any) {
         if (error.response?.data) {
           // Extract any tag scan errors
